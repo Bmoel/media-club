@@ -9,14 +9,18 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { Provider } from 'react-redux';
+import { store } from './store.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="*" element={<HomePage />} />
-        <Route path="/media/:id" element={<MediaPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<HomePage />} />
+          <Route path="/media/:id" element={<MediaPage />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   </StrictMode>,
 );

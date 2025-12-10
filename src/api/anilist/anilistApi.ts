@@ -1,9 +1,7 @@
 import { baseApi } from "../baseApi";
 import { MEDIA_INFO_TAG } from "./anilistApi.tags";
 import type { MEDIA_INFO_REQUEST, MEDIA_INFO_RESPONSE } from "./anilistApi.types";
-
-// GraphQl queries
-import {MediaInfoQuery} from "./queries/mediaInfo.gql";
+import { MediaInfoQuery } from "./anilistApi.queries";
 
 const BASE_URL: string = 'https://graphql.anilist.co';
 
@@ -12,10 +10,10 @@ const anilistApi = baseApi.injectEndpoints({
         mediaInfo: build.query<MEDIA_INFO_RESPONSE, MEDIA_INFO_REQUEST>({
             query: (body) => ({
                 url: BASE_URL,
-                body: JSON.stringify({
+                body: {
                     query: MediaInfoQuery,
                     variables: body,
-                }),
+                },
                 method: 'POST',
             }),
             providesTags: () => [MEDIA_INFO_TAG],

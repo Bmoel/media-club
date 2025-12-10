@@ -1,20 +1,28 @@
 import type { IGraphQLResponseError } from "../../types/graphql.types";
 
 export type ANILIST_RESPONSE<T> = {
-    data: T;
+    data: {
+        Page: {
+            media: T[]
+        }
+    };
     errors: Array<IGraphQLResponseError>;
 }
 
 export type MEDIA_INFO_REQUEST = {
-    idIn: number[],
+    idIn: number|string[],
+    sort: string,
 }
 
-export type MEDIA_INFO_RESPONSE = ANILIST_RESPONSE<{
+export type MEDIA_INFO = {
+    id: number,
     title: {
         english: string,
         native: string,
-        romaji: string,
-        userPreferred: string,
     };
-    bannerImage: string;
-}>
+    coverImage: {
+        extraLarge: string;
+    }
+};
+
+export type MEDIA_INFO_RESPONSE = ANILIST_RESPONSE<MEDIA_INFO>;
