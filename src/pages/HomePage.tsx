@@ -1,12 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Box, Button, IconButton, ImageList, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
 import { FilterList, Info } from "@mui/icons-material";
 import { MEDIA } from "../constants/media";
 import { useMediaInfoQuery } from "../api/anilist/anilistApi";
 import type { MEDIA_INFO } from "../api/anilist/anilistApi.types";
 import useConfig from "../hooks/useConfig";
+import FilterSideDrawer from "../components/FilterSideDrawer";
 
 function HomePage() {
+    const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
+
     const { isMobile } = useConfig();
 
     const { data } = useMediaInfoQuery({
@@ -29,7 +32,10 @@ function HomePage() {
             <Stack spacing={2}>
                 <Box display="flex" alignContent="center" justifyContent="space-between">
                     <Typography alignSelf="center" fontWeight="bold">{`${mediaList.length} anime`}</Typography>
-                    <Button startIcon={<FilterList />}>
+                    <Button
+                        onClick={() => setFilterDrawerOpen(true)}
+                        startIcon={<FilterList />}
+                    >
                         Filters
                     </Button>
                 </Box>
@@ -55,6 +61,10 @@ function HomePage() {
                     })}
                 </ImageList>
             </Stack>
+            <FilterSideDrawer
+                isOpen={filterDrawerOpen}
+                setIsOpen={(val: boolean) => setFilterDrawerOpen(val)}
+            />
         </Box>
     );
 }
