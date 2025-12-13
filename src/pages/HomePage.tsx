@@ -6,9 +6,13 @@ import { useMediaInfoQuery } from "../api/anilist/anilistApi";
 import type { MEDIA_INFO } from "../api/anilist/anilistApi.types";
 import useConfig from "../hooks/useConfig";
 import MediaInfoDrawer from "../components/MediaInfoDrawer";
+import type { MEDIA_INFO_DRAWER } from "../types/mediaInfo.types";
 
 function HomePage() {
-    const [mediaInfoDrawerOpen, setMediaInfoDrawerOpen] = useState<boolean>(false);
+    const [mediaInfoDrawer, setMediaInfoDrawer] = useState<MEDIA_INFO_DRAWER>({
+        isOpen: false,
+        id: undefined,
+    });
 
     const { isMobile } = useConfig();
 
@@ -44,7 +48,10 @@ function HomePage() {
                                             <IconButton
                                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                                                 aria-label={`An image for the anime "${media.title.english}"`}
-                                                onClick={() => setMediaInfoDrawerOpen(true)}
+                                                onClick={() => setMediaInfoDrawer({
+                                                    isOpen: true,
+                                                    id: media.id,
+                                                })}
                                             >
                                                 <Info />
                                             </IconButton>
@@ -57,7 +64,14 @@ function HomePage() {
                     </ImageList>
                 </Stack>
             </Box>
-            <MediaInfoDrawer isOpen={mediaInfoDrawerOpen} setIsOpen={(isOpen: boolean) => setMediaInfoDrawerOpen(isOpen)} />
+            <MediaInfoDrawer
+                mediaInfoDrawer={mediaInfoDrawer}
+                closeDrawer={() => setMediaInfoDrawer({
+                    id: undefined,
+                    isOpen: false,
+                })}
+                mediaList={mediaList}
+            />
         </>
     );
 }
