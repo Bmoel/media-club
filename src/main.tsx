@@ -12,6 +12,9 @@ import '@fontsource/roboto/700.css';
 import { Provider } from 'react-redux';
 import { store } from './store.ts';
 
+// Main css import
+import './css/app.css';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>

@@ -1,0 +1,9 @@
+body {
+  background-color: #F1F1F1; /* Hex code format */
+}
+
+.element-slight-hover:hover {
+  opacity: 0.98;
+  transform: scale(1.02);
+  border-radius: 10px;
+}
