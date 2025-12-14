@@ -36,11 +36,17 @@ function HomePage() {
             >
                 <Stack spacing={2}>
                     <Typography variant="h1" fontSize="32px">Media Club</Typography>
-                    <ImageList cols={isMobile ? 2 : 3} gap={isMobile ? 8 : 16}>
+                    <ImageList
+                        cols={isMobile ? 2 : 3}
+                        gap={isMobile ? 8 : 16}
+                    >
                         {mediaList.map(media => {
                             return (
                                 <ImageListItem key={media.id} className="element-slight-hover">
-                                    <img src={media.coverImage.extraLarge} style={{ borderRadius: '10px' }} />
+                                    <img
+                                        src={media.coverImage.extraLarge}
+                                        style={{ borderRadius: '10px' }}
+                                    />
                                     <ImageListItemBar
                                         title={media.title.english}
                                         subtitle={media.title.native}
@@ -70,7 +76,6 @@ function HomePage() {
                     id: undefined,
                     isOpen: false,
                 })}
-                mediaList={mediaList}
             />
         </>
     );

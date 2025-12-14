@@ -3,7 +3,8 @@ body {
 }
 
 .element-slight-hover:hover {
-  opacity: 0.98;
-  transform: scale(1.02);
+  opacity: 0.99;
+  transform: scale(0.98);
   border-radius: 10px;
+  overflow: hidden;
 }
