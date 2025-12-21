@@ -1,7 +1,7 @@
-use aws_sdk_rdsdata::{Client, types::{RecordsFormatType}};
-use crate::models::{app::ClientState, media::MediaItem};
 use crate::models::media::MediaRepository;
+use crate::models::{app::ClientState, media::MediaItem};
 use async_trait::async_trait;
+use aws_sdk_rdsdata::{types::RecordsFormatType, Client};
 
 pub(crate) struct MediaRepo {
     client: Client,
@@ -24,7 +24,9 @@ impl MediaRepo {
 #[async_trait]
 impl MediaRepository for MediaRepo {
     async fn get_media_entries(&self) -> Result<Vec<MediaItem>, String> {
-        let result = self.client.execute_statement()
+        let result = self
+            .client
+            .execute_statement()
             .resource_arn(&self.resource_arn)
             .secret_arn(&self.secret_arn)
             .database(&self.database)
@@ -36,8 +38,8 @@ impl MediaRepository for MediaRepo {
 
         let json_string = result.formatted_records().unwrap_or("[]");
 
-        let items: Vec<MediaItem> = serde_json::from_str(json_string)
-            .map_err(|e| format!("Serialization Error: {}", e))?;
+        let items: Vec<MediaItem> =
+            serde_json::from_str(json_string).map_err(|e| format!("Serialization Error: {}", e))?;
 
         Ok(items)
     }

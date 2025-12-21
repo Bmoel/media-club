@@ -1,4 +1,4 @@
-use crate::{models::media::MediaRepository};
+use crate::models::media::MediaRepository;
 use std::sync::Arc;
 
 #[derive(Clone)]

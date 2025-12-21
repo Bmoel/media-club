@@ -1,7 +1,7 @@
+use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
-use async_trait::async_trait;
 
 #[derive(Debug, Display, EnumString, Serialize, Deserialize)]
 #[strum(serialize_all = "snake_case")]
