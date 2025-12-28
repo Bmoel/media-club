@@ -33,6 +33,7 @@ export type AnilistMediaInfo = {
     startDate: {
         month: number,
         year: number,
+        day: number,
     };
 };
 

@@ -9,9 +9,11 @@ export type MediaClubApiResponse<T> = {
 
 export type WatchStatus = "completed" | "watching";
 
-export type MediaClubMediaResponse = MediaClubApiResponse<Array<{
+export type MediaClubMedia = {
     id: number,
     date_started: string,
     date_finished: string,
     status: WatchStatus,
-}>>
+}
+
+export type MediaClubMediaResponse = MediaClubApiResponse<Array<MediaClubMedia>>

@@ -22,6 +22,7 @@ query MediaInfoQuery($idIn: [Int], $sort: [MediaSort]) {
       startDate {
         month
         year
+        day
       }
     }
   }

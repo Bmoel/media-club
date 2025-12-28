@@ -1,4 +1,4 @@
-export type MEDIA_INFO_DRAWER = {
+export type MediaInfoDrawerType = {
     isOpen: boolean;
     id?: number;
 }

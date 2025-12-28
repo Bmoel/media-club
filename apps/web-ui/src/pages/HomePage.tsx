@@ -3,17 +3,17 @@ import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Stack, Typ
 import { Info } from "@mui/icons-material";
 import useConfig from "../hooks/useConfig";
 import MediaInfoDrawer from "../components/MediaInfoDrawer";
-import type { MEDIA_INFO_DRAWER } from "../types/mediaInfo.types";
+import type { MediaInfoDrawerType } from "../types/drawers.types";
 import useAnilistMediaQuery from "../hooks/useAnilistMediaQuery";
 
 function HomePage() {
-    const [mediaInfoDrawer, setMediaInfoDrawer] = useState<MEDIA_INFO_DRAWER>({
+    const [mediaInfoDrawer, setMediaInfoDrawer] = useState<MediaInfoDrawerType>({
         isOpen: false,
         id: undefined,
     });
 
     const { isMobile } = useConfig();
-    const { data: mediaList } = useAnilistMediaQuery();
+    const mediaList = useAnilistMediaQuery();
 
     return (
         <>

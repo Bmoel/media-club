@@ -1,15 +1,8 @@
-export type MediaStatus = 'watching' | 'completed';
+import type { AnilistMediaInfo } from "../api/anilist/anilistApi.types";
+import type { WatchStatus } from "../api/mediaClub/mediaClubApi.types";
 
-export type Media = {
-    /** Anilist id of anime (used in API calls) */
-    id: number,
-    
-    /** Date anime was selected via voting */
-    dateStarted: Date,
-
-    /** Date group finished watching */
-    dateFinished: Date | undefined,
-
-    /** Current status of the anime */
-    status: MediaStatus,
+export type Media = AnilistMediaInfo & {
+    media_club_date_started: Date | undefined,
+    media_club_date_finished: Date | undefined,
+    media_club_status: WatchStatus,
 }

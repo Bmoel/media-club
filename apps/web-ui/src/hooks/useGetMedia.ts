@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { type AnilistMediaInfo } from "../api/anilist/anilistApi.types";
 import useAnilistMediaQuery from "./useAnilistMediaQuery";
+import type { Media } from "../types/media.types";
 
 function useGetMedia(id?: number) {
-    const { data: mediaList } = useAnilistMediaQuery();
+    const mediaList = useAnilistMediaQuery();
 
-    const media: AnilistMediaInfo | undefined = useMemo(() => {
+    const media: Media | undefined = useMemo(() => {
         if (id === undefined || mediaList === undefined) {
             return undefined;
         }
