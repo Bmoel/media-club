@@ -1,13 +1,13 @@
 import { baseApi } from "../baseApi";
-import { MEDIA_INFO_TAG } from "./anilistApi.tags";
-import type { MEDIA_INFO_REQUEST, MEDIA_INFO_RESPONSE } from "./anilistApi.types";
+import { ANILIST_MEDIA_INFO_TAG } from "./anilistApi.tags";
+import type { AnilistMediaInfo, AnilistMediaInfoRequest, AnilistMediaInfoResponse } from "./anilistApi.types";
 import { MediaInfoQuery } from "./anilistApi.queries";
 
 const BASE_URL: string = 'https://graphql.anilist.co';
 
 const anilistApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
-        mediaInfo: build.query<MEDIA_INFO_RESPONSE, MEDIA_INFO_REQUEST>({
+        anilistMediaInfo: build.query<AnilistMediaInfo[], AnilistMediaInfoRequest>({
             query: (body) => ({
                 url: BASE_URL,
                 body: {
@@ -16,9 +16,15 @@ const anilistApi = baseApi.injectEndpoints({
                 },
                 method: 'POST',
             }),
-            providesTags: () => [MEDIA_INFO_TAG],
+            transformResponse: (response: AnilistMediaInfoResponse) => {
+                return response.data.Page.media ?? [];
+            },
+            transformErrorResponse: (response: {status: number, data: AnilistMediaInfoResponse}) => {
+                return response.data.errors;
+            },
+            providesTags: () => [ANILIST_MEDIA_INFO_TAG],
         }),
     })
 });
 
-export const {useMediaInfoQuery} = anilistApi;
+export const {useAnilistMediaInfoQuery} = anilistApi;

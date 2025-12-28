@@ -6,6 +6,7 @@ media-club-api is a Rust project that implements an AWS Lambda function in Rust.
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Cargo Lambda](https://www.cargo-lambda.info/guide/installation.html)
+- [Make](https://www.gnu.org/software/make)
 
 ## Building
 

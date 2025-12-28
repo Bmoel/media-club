@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
 import { Info } from "@mui/icons-material";
-import type { MEDIA_INFO } from "../api/anilist/anilistApi.types";
 import useConfig from "../hooks/useConfig";
 import MediaInfoDrawer from "../components/MediaInfoDrawer";
 import type { MEDIA_INFO_DRAWER } from "../types/mediaInfo.types";
@@ -14,11 +13,7 @@ function HomePage() {
     });
 
     const { isMobile } = useConfig();
-    const { data } = useAnilistMediaQuery();
-
-    const mediaList: MEDIA_INFO[] = useMemo(() => {
-        return data?.data.Page.media ?? [];
-    }, [data]);
+    const { data: mediaList } = useAnilistMediaQuery();
 
     return (
         <>
@@ -35,7 +30,7 @@ function HomePage() {
                         cols={isMobile ? 2 : 3}
                         gap={isMobile ? 8 : 16}
                     >
-                        {mediaList.map(media => {
+                        {mediaList?.map(media => {
                             return (
                                 <ImageListItem key={media.id} className="element-slight-hover">
                                     <img
@@ -61,7 +56,7 @@ function HomePage() {
                                     />
                                 </ImageListItem>
                             );
-                        })}
+                        }) ?? []}
                     </ImageList>
                 </Stack>
             </Box>

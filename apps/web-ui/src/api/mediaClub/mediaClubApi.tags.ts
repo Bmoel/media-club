@@ -1,0 +1,5 @@
+export const MEDIA_CLUB_MEDIA_TAG = 'MEDIA_CLUB_MEDIA';
+
+export const MEDIA_CLUB_TAGS = [
+    MEDIA_CLUB_MEDIA_TAG,
+];

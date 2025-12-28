@@ -1,8 +1,48 @@
 use crate::models::{media::MediaRepository, users::UsersRepository};
+use axum::{
+    http::{header, StatusCode},
+    response::{IntoResponse, Response},
+};
+use serde::Serialize;
 use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct AppState {
     pub media_repository: Arc<dyn MediaRepository + Send + Sync>,
     pub users_repository: Arc<dyn UsersRepository + Send + Sync>,
+}
+
+#[derive(Serialize)]
+pub struct ApiResponse<T> {
+    pub success: bool,
+    pub data: Option<T>,
+    pub error: Option<ApiErrorDetail>,
+}
+
+#[derive(Serialize)]
+pub struct ApiErrorDetail {
+    pub message: String,
+    pub code: String,
+}
+
+impl<T> IntoResponse for ApiResponse<T>
+where
+    T: Serialize,
+{
+    fn into_response(self) -> Response {
+        let status = if self.success {
+            StatusCode::OK
+        } else {
+            StatusCode::BAD_REQUEST
+        };
+
+        match serde_json::to_string(&self) {
+            Ok(json) => Response::builder()
+                .status(status)
+                .header(header::CONTENT_TYPE, "application/json")
+                .body(axum::body::Body::from(json))
+                .unwrap_or_else(|_| StatusCode::INTERNAL_SERVER_ERROR.into_response()),
+            Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        }
+    }
 }

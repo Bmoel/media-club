@@ -1,11 +1,18 @@
-import { useMediaInfoQuery } from "../api/anilist/anilistApi";
-import { MEDIA } from "../constants/media";
+import { useAnilistMediaInfoQuery } from "../api/anilist/anilistApi";
+import { useMediaClubMediaInfoQuery } from "../api/mediaClub/mediaClubApi";
 
 function useAnilistMediaQuery() {
-    return useMediaInfoQuery({
-        idIn: Object.keys(MEDIA),
-        sort: 'TITLE_ENGLISH',
-    });
+    const {data} = useMediaClubMediaInfoQuery(undefined);
+
+    return useAnilistMediaInfoQuery(
+        {
+            idIn: data?.map(mediaEntry => mediaEntry.id.toString()) ?? [],
+            sort: 'TITLE_ENGLISH',
+        },
+        { 
+            skip: !data 
+        }
+    );
 }
 
 export default useAnilistMediaQuery;

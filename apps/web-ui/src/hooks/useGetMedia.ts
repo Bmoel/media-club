@@ -1,16 +1,12 @@
 import { useMemo } from "react";
-import { type MEDIA_INFO } from "../api/anilist/anilistApi.types";
+import { type AnilistMediaInfo } from "../api/anilist/anilistApi.types";
 import useAnilistMediaQuery from "./useAnilistMediaQuery";
 
 function useGetMedia(id?: number) {
-    const { data } = useAnilistMediaQuery();
-    
-    const mediaList: MEDIA_INFO[] = useMemo(() => {
-            return data?.data.Page.media ?? [];
-    }, [data]);
+    const { data: mediaList } = useAnilistMediaQuery();
 
-    const media: MEDIA_INFO | undefined = useMemo(() => {
-        if (id === undefined) {
+    const media: AnilistMediaInfo | undefined = useMemo(() => {
+        if (id === undefined || mediaList === undefined) {
             return undefined;
         }
         return mediaList.find(val => val.id === id);

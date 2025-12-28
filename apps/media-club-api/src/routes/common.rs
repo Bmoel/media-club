@@ -1,29 +1,21 @@
-use axum::{
-    body::Body,
-    http::{header, StatusCode},
-    response::Response,
-};
-use serde_json::{json, Value};
+use crate::models::app::{ApiErrorDetail, ApiResponse};
+use axum::http::StatusCode;
 
-pub async fn welcome_route() -> Response {
-    Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, "application/json")
-        .body(Body::from("Welcome to media-club-api!"))
-        .unwrap()
+pub async fn welcome_route() -> ApiResponse<String> {
+    ApiResponse {
+        success: true,
+        data: Some("Welcome to media-club-api!".to_string()),
+        error: None,
+    }
 }
 
-pub async fn default_route() -> Response {
-    let data: Value = json!({
-        "error": {
-            "code": "invalid_route",
-            "message": "Route does not exist"
-        }
-    });
-
-    Response::builder()
-        .status(StatusCode::NOT_FOUND)
-        .header(header::CONTENT_TYPE, "application/json")
-        .body(Body::from(data.to_string()))
-        .unwrap()
+pub async fn default_route() -> ApiResponse<()> {
+    ApiResponse {
+        success: false,
+        data: None,
+        error: Some(ApiErrorDetail {
+            code: StatusCode::BAD_REQUEST.to_string(),
+            message: "Invalid route".to_string(),
+        }),
+    }
 }
