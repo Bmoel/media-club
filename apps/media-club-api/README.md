@@ -7,6 +7,7 @@ media-club-api is a Rust project that implements an AWS Lambda function in Rust.
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Cargo Lambda](https://www.cargo-lambda.info/guide/installation.html)
 - [Make](https://www.gnu.org/software/make)
+- [Docker](https://www.docker.com/)
 
 ## Building
 
@@ -18,36 +19,44 @@ Read more about building your lambda function in [the Cargo Lambda documentation
 
 You can run regular Rust unit tests with `cargo test`.
 
-If you want to run integration tests locally, you can use the `cargo lambda watch` and `cargo lambda invoke` commands to do it.
+If you want to run integration tests locally, you can use `cargo lambda watch`
 
 First, run `cargo lambda watch` to start a local server. When you make changes to the code, the server will automatically restart.
 
 Second, you'll need a way to pass the event data to the lambda function.
 
-You can use the existent [event payloads](https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/lambda-events/src/fixtures) in the Rust Runtime repository if your lambda function is using one of the supported event types.
-
-You can use those examples directly with the `--data-example` flag, where the value is the name of the file in the [lambda-events](https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/lambda-events/src/fixtures) repository without the `example_` prefix and the `.json` extension.
-
-```bash
-cargo lambda invoke --data-example apigw-request
-```
-
-For generic events, where you define the event data structure, you can create a JSON file with the data you want to test with. For example:
-
-```json
-{
-    "command": "test"
-}
-```
-
-Then, run `cargo lambda invoke --data-file ./data.json` to invoke the function with the data in `data.json`.
-
 For HTTP events, you can also call the function directly with cURL or any other HTTP client. For example:
 
 ```bash
-curl https://localhost:9000
+curl http://localhost:9000/lambda-url/media-club-api/endpoint
+```
+You can use the makefile `query` command to more easily query the running api
+```bash
+make query URL=endpoint
 ```
 
+### Database connection
+In order to fully use the api, you must be running the dynamodb instance on your local computer
+
+To start the db instance in Docker, you can use one of the following commands, both do the same thing
+
+```bash
+make db
+OR
+docker run -d -p 8000:8000 amazon/dynamodb-local
+```
+This will start up the dynamo db instance in docker
+
+After this though, there are not any tables setup in your local dynamodb instance
+
+To fix this, you can run the following command
+
+```bash
+make seed TABLE=tableName
+```
+At the moment due to security concerns, this requires having scanned json data of the tables. Please reach out to me (@bmoel) to help get this data
+
+### Extra
 Read more about running the local server in [the Cargo Lambda documentation for the `watch` command](https://www.cargo-lambda.info/commands/watch.html).
 Read more about invoking the function in [the Cargo Lambda documentation for the `invoke` command](https://www.cargo-lambda.info/commands/invoke.html).
 
