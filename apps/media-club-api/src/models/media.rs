@@ -3,11 +3,10 @@ use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
 
 #[derive(Debug, Display, EnumString, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 #[strum(serialize_all = "snake_case")]
 pub enum MediaStatus {
-    #[strum(serialize = "completed")]
     Completed,
-    #[strum(serialize = "watching")]
     Watching,
 }
 

@@ -5,11 +5,12 @@ use crate::{
 use aws_config::BehaviorVersion;
 use aws_sdk_dynamodb::Client;
 use axum::{routing::get, Router};
-use lambda_http::{run, tracing, Error};
+use lambda_http::{run, Error};
 use std::{
     env::{set_var, var},
     sync::Arc,
 };
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 mod db;
 mod models;
@@ -23,9 +24,6 @@ async fn main() -> Result<(), Error> {
     // Handle removing stage from url
     set_var("AWS_LAMBDA_HTTP_IGNORE_STAGE_IN_PATH", "true");
 
-    // Setup tracing for lambda
-    tracing::init_default_subscriber();
-
     // Grab environment variables
     let media_table_name = var("DB_NAME_MEDIA").map_err(|_| "media table name not found")?;
     let users_table_name = var("DB_NAME_USERS").map_err(|_| "users table name not found")?;
@@ -35,12 +33,19 @@ async fn main() -> Result<(), Error> {
     // Setup DB Client
     let shared_client;
     if dynamo_local_endpoint != "" {
+        // Local specific code
         let config_loader = aws_config::defaults(BehaviorVersion::latest());
         let config = config_loader
             .endpoint_url(dynamo_local_endpoint)
             .load()
             .await;
         shared_client = Arc::new(Client::new(&config));
+        // Setup logging ONLY for local. Should not happen for PROD
+        tracing_subscriber::registry()
+            .with(fmt::layer().pretty())
+            .with(EnvFilter::new("info"))
+            .init();
+        tracing::info!("🚀 Local development mode: Logging enabled");
     } else {
         let config = aws_config::load_from_env().await;
         shared_client = Arc::new(Client::new(&config));
