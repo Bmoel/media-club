@@ -1,18 +1,9 @@
 use crate::models::app::AppState;
-use axum::{
-    body::Body,
-    extract::State,
-    http::{header, StatusCode},
-    response::Response,
-};
-use serde_json::{json, Value};
+use axum::{extract::State, http::StatusCode, response::IntoResponse, response::Response, Json};
 
 pub async fn users_route(State(state): State<AppState>) -> Response {
-    let users: Value = json!({});
-
-    Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, "application/json")
-        .body(Body::from(users.to_string()))
-        .unwrap()
+    match state.users_repository.get_users().await {
+        Ok(items) => Json(items).into_response(),
+        Err(_err) => (StatusCode::INTERNAL_SERVER_ERROR, "Database failed").into_response(),
+    }
 }

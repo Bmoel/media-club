@@ -1,22 +1,19 @@
+use crate::models::media::MediaItem;
 use crate::models::media::MediaRepository;
-use crate::models::{app::ClientState, media::MediaItem};
 use async_trait::async_trait;
-use aws_sdk_rdsdata::{types::RecordsFormatType, Client};
+use aws_sdk_dynamodb::Client;
+use std::sync::Arc;
 
 pub(crate) struct MediaRepo {
-    client: Client,
-    resource_arn: String,
-    secret_arn: String,
-    database: String,
+    client: Arc<Client>,
+    table_name: String,
 }
 
 impl MediaRepo {
-    pub fn new(client_state: ClientState) -> Self {
+    pub fn new(client_state: Arc<Client>, table_name: String) -> Self {
         Self {
-            client: client_state.db_client,
-            resource_arn: client_state.db_resource_arn,
-            database: client_state.db_name,
-            secret_arn: client_state.db_secret_arn,
+            client: client_state,
+            table_name: table_name,
         }
     }
 }
@@ -26,20 +23,14 @@ impl MediaRepository for MediaRepo {
     async fn get_media_entries(&self) -> Result<Vec<MediaItem>, String> {
         let result = self
             .client
-            .execute_statement()
-            .resource_arn(&self.resource_arn)
-            .secret_arn(&self.secret_arn)
-            .database(&self.database)
-            .sql("SELECT anilist_id, date_started, date_ended, status FROM media")
-            .format_records_as(RecordsFormatType::Json)
+            .scan()
+            .table_name(&self.table_name)
             .send()
             .await
-            .map_err(|e| format!("RDS Error: {}", e))?;
+            .map_err(|e| format!("DnyamoDB Scan Error: {}", e))?;
 
-        let json_string = result.formatted_records().unwrap_or("[]");
-
-        let items: Vec<MediaItem> =
-            serde_json::from_str(json_string).map_err(|e| format!("Serialization Error: {}", e))?;
+        let items: Vec<MediaItem> = serde_dynamo::from_items(result.items.unwrap_or_default())
+            .map_err(|e| format!("Mapping Error: {}", e))?;
 
         Ok(items)
     }

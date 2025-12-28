@@ -1,18 +1,9 @@
 use crate::models::app::AppState;
-use axum::{
-    body::Body,
-    extract::State,
-    http::{header, StatusCode},
-    response::Response,
-};
-use serde_json::{json, Value};
+use axum::{extract::State, http::StatusCode, response::IntoResponse, response::Response, Json};
 
 pub async fn media_route(State(state): State<AppState>) -> Response {
-    let media: Value = json!({}); //TODO: Get media from db
-
-    Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, "application/json")
-        .body(Body::from(media.to_string()))
-        .unwrap()
+    match state.media_repository.get_media_entries().await {
+        Ok(items) => Json(items).into_response(),
+        Err(_err) => (StatusCode::INTERNAL_SERVER_ERROR, "Database failed").into_response(),
+    }
 }

@@ -1,5 +1,4 @@
 use async_trait::async_trait;
-use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
 
@@ -14,9 +13,9 @@ pub enum MediaStatus {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MediaItem {
-    pub anilist_id: i64,
-    pub date_started: NaiveDate,
-    pub date_ended: Option<NaiveDate>,
+    pub id: i64,
+    pub date_started: String,
+    pub date_finished: String,
     pub status: MediaStatus,
 }
 
