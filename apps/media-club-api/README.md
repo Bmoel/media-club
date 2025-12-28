@@ -54,7 +54,7 @@ To fix this, you can run the following command
 ```bash
 make seed TABLE=tableName
 ```
-At the moment due to security concerns, this requires having scanned json data of the tables. Please reach out to me (@bmoel) to help get this data
+At the moment due to security concerns, this requires having scanned json data of the tables. Please reach out to me (@Bmoel) to help get this data
 
 ### Extra
 Read more about running the local server in [the Cargo Lambda documentation for the `watch` command](https://www.cargo-lambda.info/commands/watch.html).
