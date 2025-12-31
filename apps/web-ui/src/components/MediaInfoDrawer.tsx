@@ -1,4 +1,4 @@
-import { Divider, Stack, SwipeableDrawer, Typography, type SwipeableDrawerProps, type SxProps } from "@mui/material";
+import { Divider, Stack, SwipeableDrawer, type SwipeableDrawerProps, type SxProps, Typography } from "@mui/material";
 import useConfig from "../hooks/useConfig";
 import { useMemo } from "react";
 import type { Theme } from "@emotion/react";

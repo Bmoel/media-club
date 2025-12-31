@@ -1,8 +1,8 @@
-import { AppBar, Box, Toolbar, Typography, IconButton, SwipeableDrawer, type Theme, type SxProps, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, ListItemAvatar, Avatar } from '@mui/material';
+import { AppBar, Avatar, Box, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, type SxProps, type Theme, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useCallback, useMemo, useState } from 'react';
 import useConfig from '../../hooks/useConfig';
-import { Home, AppRegistration } from '@mui/icons-material';
+import { AppRegistration, Home } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 
 export default function MenuBar() {
