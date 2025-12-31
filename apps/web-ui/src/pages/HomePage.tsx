@@ -37,7 +37,12 @@ function HomePage() {
                                     src={media.coverImage.extraLarge}
                                     style={{ borderRadius: '10px', cursor: 'pointer' }}
                                     alt={`${media.title.english} cover image`}
-                                    onClick={() => navigate(`/media/${media.id}`)}
+                                    onClick={() => {
+                                        if (isNaN(media.id)) {
+                                            return;
+                                        }
+                                        navigate(`/media/${media.id}`);
+                                    }}
                                 />
                                 <ImageListItemBar
                                     title={media.title.english}
