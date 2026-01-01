@@ -1,28 +1,19 @@
-import { Avatar, Box, Breadcrumbs, Link, Tooltip, Typography } from "@mui/material";
-import { Home, NavigateNext } from "@mui/icons-material";
-import { useNavigate } from "react-router";
+import { Avatar, Box, Breadcrumbs, Tooltip, Typography } from "@mui/material";
+import { NavigateNext } from "@mui/icons-material";
 import type { Media } from "../types/media.types";
 import useConfig from "../hooks/useConfig";
+import HomeBreadcrumb from "./common/HomeBreadcrumb";
 
 interface MediaPageBreadcrumbsProps {
     mediaInfo?: Media,
 }
 
 function MediaPageBreadcrumbs({ mediaInfo }: MediaPageBreadcrumbsProps) {
-    const navigate = useNavigate();
     const { isMobile } = useConfig();
 
     return (
         <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumbs">
-            <Link
-                onClick={() => navigate('/')}
-                sx={{ display: 'flex', alignItems: 'center', cursor: "pointer" }}
-                underline="hover"
-                color="inherit"
-            >
-                <Home sx={{ mr: 0.5 }} fontSize="inherit" />
-                Home
-            </Link>
+            <HomeBreadcrumb />
             <Box display="flex" alignItems="center">
                 <Avatar
                     alt='chuuniland logo'
