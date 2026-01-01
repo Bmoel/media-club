@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Zoom } from "@mui/material";
+import { Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Zoom } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import useConfig from "../hooks/useConfig";
 import MediaInfoDrawer from "../components/MediaInfoDrawer";
@@ -19,13 +19,7 @@ function HomePage() {
 
     return (
         <>
-            <Box
-                sx={isMobile ? undefined : {
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
+            <Container maxWidth="lg">
                 <ImageList
                     cols={isMobile ? 2 : 3}
                     gap={isMobile ? 8 : 16}
@@ -67,7 +61,7 @@ function HomePage() {
                         );
                     }) ?? []}
                 </ImageList>
-            </Box >
+            </Container>
             <MediaInfoDrawer
                 mediaInfoDrawer={mediaInfoDrawer}
                 closeDrawer={() => setMediaInfoDrawer({
