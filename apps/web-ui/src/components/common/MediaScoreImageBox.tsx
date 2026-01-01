@@ -11,8 +11,8 @@ function MediaScoreImageBox({ mediaSrc, scoreText, titleText }: MediaScoreImageB
         <Box
             sx={{ position: 'relative', height: 150, overflow: 'hidden', borderRadius: 2 }}
         >
-            <Box
-                sx={{
+            <div
+                style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -24,7 +24,6 @@ function MediaScoreImageBox({ mediaSrc, scoreText, titleText }: MediaScoreImageB
                     transform: 'scale(1.1)',
                 }}
             />
-
             <Box sx={{ position: 'relative', p: 3, color: 'white', fontWeight: 'bold', textShadow: '0px 2px 4px rgba(0,0,0,0.5)' }}>
                 <Stack justifyContent="center">
                     <Typography variant="overline">{titleText}:</Typography>

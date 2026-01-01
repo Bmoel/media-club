@@ -35,7 +35,7 @@ function MediaPage() {
                     <Grid size={12}>
                         <Box sx={{ mb: 3 }}>
                             <Typography variant="overline" sx={{ color: 'text.secondary', ml: 1 }}>
-                                Club Members
+                                Members
                             </Typography>
                             <Stack
                                 direction="row"
