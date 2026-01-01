@@ -1,7 +1,7 @@
 import { Box, Breadcrumbs, Typography } from "@mui/material";
 import { AppRegistration, NavigateNext } from "@mui/icons-material";
-import useConfig from "../hooks/useConfig";
-import HomeBreadcrumb from "./common/HomeBreadcrumb";
+import useConfig from "../../../hooks/useConfig";
+import HomeBreadcrumb from "../../../components/HomeBreadcrumb";
 
 function RegistrationPageBreadcrumbs() {
     const { isMobile } = useConfig();

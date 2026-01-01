@@ -2,7 +2,7 @@ import { Box, Divider, Stack, SwipeableDrawer, type SwipeableDrawerProps, type S
 import useConfig from "../hooks/useConfig";
 import { useMemo } from "react";
 import type { Theme } from "@emotion/react";
-import { Puller } from "./common/Puller";
+import { Puller } from "./Puller";
 import type { MediaInfoDrawerType } from "../types/drawers.types";
 import useGetMedia from "../hooks/useGetMedia";
 import useDateFormat from "../hooks/useDateFormat";

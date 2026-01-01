@@ -1,7 +1,7 @@
 import { AppBar, Avatar, Box, Chip, Divider, IconButton, List, Link, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, type SxProps, type Theme, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useCallback, useMemo, useState } from 'react';
-import useConfig from '../../hooks/useConfig';
+import useConfig from '../hooks/useConfig';
 import { AppRegistration, Home, GitHub } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 

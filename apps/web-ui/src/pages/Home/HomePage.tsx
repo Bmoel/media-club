@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Zoom } from "@mui/material";
 import { Info } from "@mui/icons-material";
-import useConfig from "../hooks/useConfig";
-import MediaInfoDrawer from "../components/MediaInfoDrawer";
-import type { MediaInfoDrawerType } from "../types/drawers.types";
-import useAnilistMediaQuery from "../hooks/useAnilistMediaQuery";
+import useConfig from "../../hooks/useConfig";
+import MediaInfoDrawer from "../../components/MediaInfoDrawer";
+import type { MediaInfoDrawerType } from "../../types/drawers.types";
+import useAnilistMediaQuery from "../../hooks/useAnilistMediaQuery";
 import { useNavigate } from "react-router";
 
 function HomePage() {

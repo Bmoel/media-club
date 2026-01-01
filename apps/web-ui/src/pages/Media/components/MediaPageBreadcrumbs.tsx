@@ -1,8 +1,8 @@
 import { Avatar, Box, Breadcrumbs, Tooltip, Typography } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
-import type { Media } from "../types/media.types";
-import useConfig from "../hooks/useConfig";
-import HomeBreadcrumb from "./common/HomeBreadcrumb";
+import type { Media } from "../../../types/media.types";
+import useConfig from "../../../hooks/useConfig";
+import HomeBreadcrumb from "../../../components/HomeBreadcrumb";
 
 interface MediaPageBreadcrumbsProps {
     mediaInfo?: Media,

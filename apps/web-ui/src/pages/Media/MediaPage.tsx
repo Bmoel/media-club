@@ -1,10 +1,10 @@
 import { useParams } from "react-router";
-import useGetMedia from "../hooks/useGetMedia";
+import useGetMedia from "../../hooks/useGetMedia";
 import { Avatar, Box, Container, Fade, Grid, Stack, Typography } from "@mui/material";
-import useConfig from "../hooks/useConfig";
+import useConfig from "../../hooks/useConfig";
 import { useMemo } from "react";
-import MediaPageBreadcrumbs from "../components/MediaPageBreadcrumbs";
-import MediaScoreImageBox from "../components/common/MediaScoreImageBox";
+import MediaPageBreadcrumbs from "./components/MediaPageBreadcrumbs";
+import MediaScoreImageBox from "./components/MediaScoreImageBox";
 
 function MediaPage() {
     const { id } = useParams();

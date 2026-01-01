@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, Avatar, Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
-import RegistrationPageBreadcrumbs from "../components/RegistrationPageBreadcrumbs";
+import RegistrationPageBreadcrumbs from "./components/RegistrationPageBreadcrumbs";
 
 function RegistrationPage() {
     return (

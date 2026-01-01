@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import MenuBar from "./common/MenuBar";
+import MenuBar from "./MenuBar";
 
 interface MenuWrapperProps {
     children: ReactElement
