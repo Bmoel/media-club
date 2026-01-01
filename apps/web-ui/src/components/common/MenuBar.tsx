@@ -1,8 +1,8 @@
-import { AppBar, Avatar, Box, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, type SxProps, type Theme, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Chip, Divider, IconButton, List, Link, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer, type SxProps, type Theme, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useCallback, useMemo, useState } from 'react';
 import useConfig from '../../hooks/useConfig';
-import { AppRegistration, Home } from '@mui/icons-material';
+import { AppRegistration, Home, GitHub } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 
 export default function MenuBar() {
@@ -12,9 +12,10 @@ export default function MenuBar() {
     const navigate = useNavigate();
 
     const listCss: SxProps<Theme> = useMemo(() => {
-        return isMobile
-            ? { width: `${screenWidth * 0.6}px` }
-            : { width: `${screenWidth * .15}px` };
+        if (isMobile) {
+            return { width: `${screenWidth * 0.7}px` };
+        }
+        return { width: `350px` };
     }, [isMobile, screenWidth]);
 
     const navigateAway = useCallback((location: string) => {
@@ -53,7 +54,7 @@ export default function MenuBar() {
                 <List sx={listCss}>
                     <ListItem key={'title'}>
                         <ListItemAvatar>
-                            <Avatar alt='chuuniland logo' src="chuuniland.svg" />
+                            <Avatar alt='chuuniland logo' src="/chuuniland.svg" />
                         </ListItemAvatar>
                         <ListItemText>
                             <Typography fontWeight="bold">Media Club</Typography>
@@ -85,6 +86,20 @@ export default function MenuBar() {
                         </ListItemButton>
                     </ListItem>
                 </List>
+                <Box display="flex" justifyContent="center" marginTop="auto" paddingBottom="5px">
+                    <Chip
+                        icon={<GitHub />}
+                        component={Link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/Bmoel/media-club"
+                        label="Github"
+                        color="primary"
+                        variant="outlined"
+                        aria-label="Visit github repository"
+                        clickable
+                    />
+                </Box>
             </SwipeableDrawer>
         </>
     );
