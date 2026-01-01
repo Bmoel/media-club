@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
+import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Zoom } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import useConfig from "../hooks/useConfig";
 import MediaInfoDrawer from "../components/MediaInfoDrawer";
@@ -32,40 +32,42 @@ function HomePage() {
                 >
                     {mediaList?.map(media => {
                         return (
-                            <ImageListItem key={media.id} className="element-slight-hover">
-                                <img
-                                    src={media.coverImage.extraLarge}
-                                    style={{ borderRadius: '10px', cursor: 'pointer' }}
-                                    alt={`${media.title.english} cover image`}
-                                    onClick={() => {
-                                        if (isNaN(media.id)) {
-                                            return;
+                            <Zoom in timeout={350} key={media.id} >
+                                <ImageListItem key={media.id} className="element-slight-hover">
+                                    <img
+                                        src={media.coverImage.extraLarge}
+                                        style={{ borderRadius: '10px', cursor: 'pointer' }}
+                                        alt={`${media.title.english} cover image`}
+                                        onClick={() => {
+                                            if (isNaN(media.id)) {
+                                                return;
+                                            }
+                                            navigate(`/media/${media.id}`);
+                                        }}
+                                    />
+                                    <ImageListItemBar
+                                        title={media.title.english}
+                                        subtitle={media.title.native}
+                                        actionIcon={
+                                            <IconButton
+                                                sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                                                aria-label={`An image for the anime "${media.title.english}"`}
+                                                onClick={() => setMediaInfoDrawer({
+                                                    isOpen: true,
+                                                    id: media.id,
+                                                })}
+                                            >
+                                                <Info />
+                                            </IconButton>
                                         }
-                                        navigate(`/media/${media.id}`);
-                                    }}
-                                />
-                                <ImageListItemBar
-                                    title={media.title.english}
-                                    subtitle={media.title.native}
-                                    actionIcon={
-                                        <IconButton
-                                            sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                            aria-label={`An image for the anime "${media.title.english}"`}
-                                            onClick={() => setMediaInfoDrawer({
-                                                isOpen: true,
-                                                id: media.id,
-                                            })}
-                                        >
-                                            <Info />
-                                        </IconButton>
-                                    }
-                                    style={{ borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' }}
-                                />
-                            </ImageListItem>
+                                        style={{ borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' }}
+                                    />
+                                </ImageListItem>
+                            </Zoom>
                         );
                     }) ?? []}
                 </ImageList>
-            </Box>
+            </Box >
             <MediaInfoDrawer
                 mediaInfoDrawer={mediaInfoDrawer}
                 closeDrawer={() => setMediaInfoDrawer({
