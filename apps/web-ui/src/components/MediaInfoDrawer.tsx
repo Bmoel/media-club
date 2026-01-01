@@ -1,4 +1,4 @@
-import { Divider, Stack, SwipeableDrawer, type SwipeableDrawerProps, type SxProps, Typography } from "@mui/material";
+import { Box, Divider, Stack, SwipeableDrawer, type SwipeableDrawerProps, type SxProps, Typography } from "@mui/material";
 import useConfig from "../hooks/useConfig";
 import { useMemo } from "react";
 import type { Theme } from "@emotion/react";
@@ -43,41 +43,63 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                 {isMobile && <Puller />}
                 {media !== undefined && (
                     <>
-                        <Typography fontWeight="bold">{media.title.english}</Typography>
-                        <img
-                            src={media.bannerImage}
-                            alt={`Banner image for ${media.title.english}`}
-                        />
-                        <Divider />
-                        <Typography fontWeight="bold">Anime start date</Typography>
-                        <Typography>
+                        <Box sx={{ position: 'relative', height: 100, overflow: 'hidden', borderRadius: 2 }}>
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    top: 0, left: 0, right: 0, bottom: 0,
+                                    backgroundImage: `url(${media.bannerImage})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    filter: 'blur(2px) brightness(0.75)',
+                                    transform: 'scale(1.1)',
+                                }}
+                            />
+                            <Box sx={{
+                                position: 'relative',
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                px: 2,
+                                textShadow: '0px 2px 4px rgba(0,0,0,0.5)'
+                            }}
+                            >
+                                <Typography color="white" fontSize="32px" fontWeight="bold" align="center">
+                                    {media.title.english}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        <Typography fontWeight="bold" variant="overline" color="text.secondary">Anime start date</Typography>
+                        <Typography variant="body1" fontWeight="bold">
                             {formatDate(new Date(media.startDate.year, media.startDate.month, media.startDate.day))}
                         </Typography>
+                        <Divider />
                         {media.media_club_date_started && (
                             <>
-                                <Typography fontWeight="bold">Media Club start date</Typography>
-                                <Typography>{formatDate(media.media_club_date_started)}</Typography>
+                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Media Club start date</Typography>
+                                <Typography variant="body1" fontWeight="bold">{formatDate(media.media_club_date_started)}</Typography>
                             </>
                         )}
                         {media.media_club_date_finished && (
                             <>
-                                <Typography fontWeight="bold">Media Club end date</Typography>
-                                <Typography>{formatDate(media.media_club_date_finished)}</Typography>
+                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Media Club end date</Typography>
+                                <Typography variant="body1" fontWeight="bold">{formatDate(media.media_club_date_finished)}</Typography>
                             </>
                         )}
                         <Divider />
-                        <Typography fontWeight="bold">Anilist average score</Typography>
-                        <Typography>{`${media.averageScore} / 100`}</Typography>
+                        <Typography fontWeight="bold" variant="overline" color="text.secondary">Anilist average score</Typography>
+                        <Typography variant="body1" fontWeight="bold">{`${media.averageScore} / 100`}</Typography>
                         <Divider />
-                        <Typography fontWeight="bold">Animation Studios</Typography>
+                        <Typography fontWeight="bold" variant="overline" color="text.secondary">Animation Studios</Typography>
                         {Array.isArray(media.studios.nodes) && media.studios.nodes.map((studioInfo, idx) => {
-                            return <Typography key={`studio-name-${idx}`}>{studioInfo.name}</Typography>;
+                            return <Typography variant="body1" fontWeight="bold" key={`studio-name-${idx}`}>{studioInfo.name}</Typography>;
                         })}
-                        <Divider />
                     </>
-                )}
-            </Stack>
-        </SwipeableDrawer>
+                )
+                }
+            </Stack >
+        </SwipeableDrawer >
     );
 }
 

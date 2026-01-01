@@ -23,14 +23,14 @@ function MediaPage() {
                             <MediaScoreImageBox
                                 mediaSrc={mediaInfo?.coverImage.extraLarge ?? ''}
                                 titleText="Anilist Average Score"
-                                scoreText={'X'}
+                                scoreText={`${mediaInfo?.averageScore.toString() ?? '-'} / 100`}
                             />
                         </Grid>
                         <Grid size={averageScoreBoxesGridSize}>
                             <MediaScoreImageBox
                                 mediaSrc={'/chuuniland.svg'}
                                 titleText="Media Club Average Score"
-                                scoreText={'Y'}
+                                scoreText={'- / 100'}
                             />
                         </Grid>
                         <Grid size={12}>
