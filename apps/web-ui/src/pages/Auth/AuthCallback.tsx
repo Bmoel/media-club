@@ -19,7 +19,10 @@ function AuthCallback() {
     const handleAuth = useCallback(async (token: string) => {
         try {
             const userId = await trigger(token).unwrap();
-            await updatePost({ anilistId: userId }).unwrap();
+            const success = await updatePost({ anilistId: userId }).unwrap();
+            if (!success) {
+                throw new Error('Failed saving id to backend');
+            }
             setLoadingText('Successfully synced profile, redirecting...');
         } catch {
             setLoadingText('Failed to sync profile, redirecting...');
