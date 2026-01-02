@@ -1,11 +1,7 @@
 import type { IGraphQLResponseError } from "../../types/graphql.types";
 
 export type AnilistResponse<T> = {
-    data: {
-        Page: {
-            media: T[]
-        }
-    };
+    data: T,
     errors: Array<IGraphQLResponseError>;
 }
 
@@ -37,4 +33,16 @@ export type AnilistMediaInfo = {
     };
 };
 
-export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfo>;
+export type AnilistMediaInfoResponseData = {
+    Page: {
+        media: AnilistMediaInfo[]
+    }
+}
+
+export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseData>;
+
+export type AnilistGetUserInfo = {
+    id: number;
+};
+
+export type AnilistGetUserResponse = AnilistResponse<AnilistGetUserInfo>;

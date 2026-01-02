@@ -1,7 +1,7 @@
 import { baseApi } from "../baseApi";
 import { ANILIST_MEDIA_INFO_TAG } from "./anilistApi.tags";
-import type { AnilistMediaInfo, AnilistMediaInfoRequest, AnilistMediaInfoResponse } from "./anilistApi.types";
-import { MediaInfoQuery } from "./anilistApi.queries";
+import type { AnilistMediaInfo, AnilistMediaInfoRequest, AnilistMediaInfoResponse, AnilistGetUserResponse } from "./anilistApi.types";
+import { MediaInfoQuery, GetUserIdQuery } from "./anilistApi.queries";
 
 const BASE_URL: string = 'https://graphql.anilist.co';
 
@@ -24,7 +24,28 @@ const anilistApi = baseApi.injectEndpoints({
             },
             providesTags: () => [ANILIST_MEDIA_INFO_TAG],
         }),
+        getUserId: build.query<number, string>({
+            query: (accessToken) => ({
+                url: BASE_URL,
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: {
+                    query: GetUserIdQuery,
+                    variables: {},
+                }
+            }),
+            transformResponse: (response: AnilistGetUserResponse) => {
+                return response.data.id;
+            },
+            transformErrorResponse: (response: {status: number, data: AnilistMediaInfoResponse}) => {
+                return response.data.errors;
+            },
+        })
     })
 });
 
-export const {useAnilistMediaInfoQuery} = anilistApi;
+export const {useAnilistMediaInfoQuery, useLazyGetUserIdQuery} = anilistApi;

@@ -16,6 +16,7 @@ import '@fontsource/roboto/700.css';
 
 // Main css import
 import './css/app.css';
+import AuthCallback from './pages/Auth/AuthCallback.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="*" element={<MenuWrapper><HomePage /></MenuWrapper>} />
           <Route path="/media/:id" element={<MenuWrapper><MediaPage /></MenuWrapper>} />
           <Route path="/registration" element={<MenuWrapper><RegistrationPage /></MenuWrapper>} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
         </Routes>
       </BrowserRouter>
     </Provider>

@@ -28,3 +28,11 @@ query MediaInfoQuery($idIn: [Int], $sort: [MediaSort]) {
   }
 }
 `;
+
+export const GetUserIdQuery = `
+query Viewer {
+  Viewer {
+    id
+  }
+}
+`;
