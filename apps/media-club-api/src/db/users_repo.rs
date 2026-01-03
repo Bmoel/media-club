@@ -2,8 +2,7 @@ use crate::errors::MyError;
 use crate::models::users::User;
 use crate::models::users::UsersRepository;
 use async_trait::async_trait;
-use aws_sdk_dynamodb::Client;
-use aws_sdk_dynamodb::error::SdkError;
+use aws_sdk_dynamodb::{error::SdkError, types::AttributeValue, Client};
 use std::sync::Arc;
 
 pub(crate) struct UsersRepo {
@@ -59,7 +58,27 @@ impl UsersRepository for UsersRepo {
                         return MyError::Internal("User already exists".into());
                     }
                 }
-                MyError::Internal(format!("DynamoDB PutItem Error: {}", e))
+                MyError::Database(format!("DynamoDB PutItem Error: {}", e))
+            })?;
+
+        Ok(())
+    }
+
+    async fn remove_user(&self, user_id: &i32) -> Result<(), MyError> {
+        self.client
+            .delete_item()
+            .table_name(&self.table_name)
+            .key("user_id", AttributeValue::N(user_id.to_string()))
+            .condition_expression("attribute_exists(id)")
+            .send()
+            .await
+            .map_err(|e| {
+                if let SdkError::ServiceError(service_error) = &e {
+                    if service_error.err().is_conditional_check_failed_exception() {
+                        return MyError::Internal("User does not exist".into());
+                    }
+                }
+                MyError::Internal(format!("DynamoDB DeleteItem Error: {}", e))
             })?;
 
         Ok(())

@@ -1,5 +1,6 @@
 use crate::db::{media_repo::MediaRepo, users_repo::UsersRepo};
-use crate::models::app::AppState;
+use crate::errors::MyError;
+use crate::models::app::{AppState, EnvironmentVariables};
 use aws_sdk_dynamodb::Client;
 use std::sync::Arc;
 use tracing_subscriber::prelude::*;
@@ -19,10 +20,8 @@ pub fn init_telemetry() {
     }
 }
 
-pub async fn startup_app_state() -> Result<AppState, lambda_http::Error> {
-    let media_table = std::env::var("DB_NAME_MEDIA")?;
-    let users_table = std::env::var("DB_NAME_USERS")?;
-
+pub async fn startup_app_state() -> Result<AppState, MyError> {
+    let environtment_vars = get_environment_variables()?;
     let config = if let Ok(local_url) = std::env::var("DYNAMO_LOCAL_ENDPOINT") {
         aws_config::defaults(aws_config::BehaviorVersion::latest())
             .endpoint_url(local_url)
@@ -36,11 +35,39 @@ pub async fn startup_app_state() -> Result<AppState, lambda_http::Error> {
     let http_client = reqwest::Client::builder()
         .user_agent("MediaClub-API/1.0")
         .build()
-        .expect("Failed to create reqwest client");
+        .map_err(|_e| MyError::Internal("Failed to establish http client".into()))?;
 
     Ok(AppState {
-        media_repository: Arc::new(MediaRepo::new(Arc::clone(&client), media_table)),
-        users_repository: Arc::new(UsersRepo::new(Arc::clone(&client), users_table)),
+        media_repository: Arc::new(MediaRepo::new(
+            Arc::clone(&client),
+            environtment_vars.media_table_name,
+        )),
+        users_repository: Arc::new(UsersRepo::new(
+            Arc::clone(&client),
+            environtment_vars.users_table_name,
+        )),
         http_client: http_client,
+        environment_variables: get_environment_variables()?,
+    })
+}
+
+fn get_environment_variables() -> Result<EnvironmentVariables, MyError> {
+    let media_table_name = std::env::var("DB_NAME_MEDIA")
+        .map_err(|_| MyError::Internal("Failed to find DB_NAME_MEDIA".into()))?;
+    let users_table_name = std::env::var("DB_NAME_USERS")
+        .map_err(|_| MyError::Internal("Failed to find DB_NAME_USERS".into()))?;
+    let client_id = std::env::var("ANILIST_CLIENT_APP_ID")
+        .map_err(|_| MyError::Internal("Failed to find ANILIST_CLIENT_APP_ID".into()))?;
+    let client_secret = std::env::var("ANILIST_CLIENT_APP_SECRET")
+        .map_err(|_| MyError::Internal("Failed to find ANILIST_CLIENT_APP_SECRET".into()))?;
+    let redirect_uri = std::env::var("ANILIST_REDIRECT_URI")
+        .map_err(|_| MyError::Internal("Failed to find ANILIST_REDIRECT_URI".into()))?;
+
+    Ok(EnvironmentVariables {
+        media_table_name,
+        users_table_name,
+        client_id,
+        client_secret,
+        redirect_uri,
     })
 }

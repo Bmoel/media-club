@@ -1,5 +1,5 @@
 pub mod app;
-pub mod auth_sync;
-pub mod common;
-pub mod media;
-pub mod users;
+pub mod auth_routes;
+pub mod common_routes;
+pub mod media_routes;
+pub mod users_routes;

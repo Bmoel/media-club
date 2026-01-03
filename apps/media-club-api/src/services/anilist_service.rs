@@ -1,4 +1,4 @@
-use crate::errors::MyError;
+use crate::{errors::MyError, models::app::AppState};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
@@ -7,22 +7,17 @@ struct GraphQLRequest {
     variables: serde_json::Value,
 }
 
-pub async fn exchange_code_for_token(
-    http: &reqwest::Client,
-    client_id: &str,
-    client_secret: &str,
-    redirect_uri: &str,
-    code: &str,
-) -> Result<String, MyError> {
+pub async fn exchange_code_for_token(state: &AppState, auth_code: &str) -> Result<String, MyError> {
     let payload = serde_json::json!({
         "grant_type": "authorization_code",
-        "client_id": client_id,
-        "client_secret": client_secret,
-        "redirect_uri": redirect_uri,
-        "code": code,
+        "client_id": state.environment_variables.client_id,
+        "client_secret": state.environment_variables.client_secret,
+        "redirect_uri": state.environment_variables.redirect_uri,
+        "code": auth_code,
     });
 
-    let res = http
+    let res = state
+        .http_client
         .post("https://anilist.co/api/v2/oauth/token")
         .json(&payload)
         .send()
