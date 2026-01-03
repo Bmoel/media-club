@@ -1,6 +1,6 @@
 import { baseApi } from "../baseApi";
-import { MEDIA_CLUB_MEDIA_TAG } from "./mediaClubApi.tags";
-import type { MediaClubMediaResponse, AuthAnilistUserRequest } from "./mediaClubApi.types";
+import { MEDIA_CLUB_MEDIA_TAG, MEDIA_CLUB_USERS_TAG } from "./mediaClubApi.tags";
+import type { MediaClubMediaResponse, AuthAnilistUserRequest, MediaClubUsersResponse } from "./mediaClubApi.types";
 
 const BASE_URL = import.meta.env.VITE_MEDIA_CLUB_API_BASE_URL;
 
@@ -20,22 +20,36 @@ const mediaClubApi = baseApi.injectEndpoints({
                 return errorData?.error?.message ?? "An unknown error occurred";
             }
         }),
+        getUsers: build.query<number[], undefined>({
+            query: () => ({
+                url: `${BASE_URL}/users`,
+                method: 'GET'
+            }),
+            providesTags: () => [MEDIA_CLUB_USERS_TAG],
+            transformResponse: (response: MediaClubUsersResponse) => {
+                return response.data ?? [];
+            },
+            transformErrorResponse: (response: {status: number, data: MediaClubUsersResponse}) => {
+                const errorData = response.data;
+                return errorData?.error?.message ?? "An unknown error occurred";
+            }
+        }),
         syncAnilistUser: build.mutation<boolean, AuthAnilistUserRequest>({
             query: ({ code }) => ({
                 url: `${BASE_URL}/auth/sync`,
                 method: 'POST',
                 body: { code },
-            })
-            //TODO: Add invalidatesTags for users query once that is made
+            }),
+            invalidatesTags: () => [MEDIA_CLUB_USERS_TAG],
         }),
         removeAnilistUser: build.mutation<boolean, AuthAnilistUserRequest>({
             query: ({ code }) => ({
                 url: `${BASE_URL}/auth/remove`,
                 method: 'POST',
                 body: { code },
-            })
-            //TODO: Add invalidatesTags for users query once that is made
-        })
+            }),
+            invalidatesTags: () => [MEDIA_CLUB_USERS_TAG],
+        }),
     }),
 });
 
