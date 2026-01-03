@@ -2,14 +2,18 @@ import { useParams } from "react-router";
 import useGetMedia from "../../hooks/useGetMedia";
 import { Avatar, Box, Container, Fade, Grid, Stack, Typography } from "@mui/material";
 import useConfig from "../../hooks/useConfig";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import MediaPageBreadcrumbs from "./components/MediaPageBreadcrumbs";
 import MediaScoreImageBox from "./components/MediaScoreImageBox";
+import useGetUsers from "../../hooks/useGetUsers";
+import { type AnilistUser } from "../../api/anilist/anilistApi.types";
 
 function MediaPage() {
+    const [selectedUser, setSelectedUser] = useState<AnilistUser | undefined>(undefined);
     const { id } = useParams();
     const { isMobile } = useConfig();
     const mediaInfo = useGetMedia(Number(id));
+    const { users } = useGetUsers();
 
     const averageScoreBoxesGridSize: number = useMemo(() => isMobile ? 12 : 6, [isMobile]);
 
@@ -48,29 +52,27 @@ function MediaPage() {
                                         '&::-webkit-scrollbar': { display: 'none' }
                                     }}
                                 >
-                                    {['member1', 'member2', 'member3', 'member4', 'member5'].map((member) => (
+                                    {users.map((user) => (
                                         <Box
-                                            key={member}
-                                            // onClick={() => setSelectedUser(member)}
+                                            key={user.name}
+                                            onClick={() => setSelectedUser(user)}
                                             sx={{
                                                 textAlign: 'center',
                                                 cursor: 'pointer',
-                                                opacity: 1,
-                                                // opacity: selectedUser?.id === member.id ? 1 : 0.5,
+                                                opacity: selectedUser?.id === user.id ? 1 : 0.5,
                                                 transition: '0.2s'
                                             }}
                                         >
                                             <Avatar
-                                                src={'/chuuniland.svg'}
+                                                src={user.avatar.medium}
                                                 sx={{
                                                     width: 56,
                                                     height: 56,
-                                                    border: '2px solid #1976d2'
-                                                    // border: selectedUser?.id === member.id ? '2px solid #1976d2' : 'none'
+                                                    border: selectedUser?.id === user.id ? '2px solid #1976d2' : 'none'
                                                 }}
                                             />
                                             <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
-                                                {member}
+                                                {user.name}
                                             </Typography>
                                         </Box>
                                     ))}

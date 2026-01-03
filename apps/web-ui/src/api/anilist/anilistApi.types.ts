@@ -40,3 +40,18 @@ export type AnilistMediaInfoResponseData = {
 }
 
 export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseData>;
+
+export type AnilistUser = {
+    id: number;
+    name: string;
+    avatar: {
+        medium: string,
+    };
+}
+
+export type AnilistUserInfoRequest = {
+    query: string;
+    variables: Record<string, number>;
+}
+
+export type AnilistUserInfoResponse = AnilistResponse<Record<string, AnilistUser>>;

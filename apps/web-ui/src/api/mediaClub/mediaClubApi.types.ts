@@ -18,7 +18,12 @@ export type MediaClubMedia = {
 
 export type MediaClubMediaResponse = MediaClubApiResponse<Array<MediaClubMedia>>;
 
-export type MediaClubUsersResponse = MediaClubApiResponse<Array<number>>;
+export type MediaClubUser = {
+    user_id: number,
+    created_at: string,
+}
+
+export type MediaClubUsersResponse = MediaClubApiResponse<Array<MediaClubUser>>;
 
 export type AuthAnilistUserRequest = { code: string };
 

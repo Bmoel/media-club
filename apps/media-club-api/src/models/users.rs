@@ -5,7 +5,8 @@ use crate::errors::MyError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    pub id: i64,
+    pub user_id: i64,
+    pub created_at: String,
 }
 
 #[async_trait]

@@ -1,6 +1,6 @@
 import { baseApi } from "../baseApi";
 import { MEDIA_CLUB_MEDIA_TAG, MEDIA_CLUB_USERS_TAG } from "./mediaClubApi.tags";
-import type { MediaClubMediaResponse, AuthAnilistUserRequest, MediaClubUsersResponse } from "./mediaClubApi.types";
+import type { MediaClubMediaResponse, AuthAnilistUserRequest, MediaClubUsersResponse, MediaClubUser } from "./mediaClubApi.types";
 
 const BASE_URL = import.meta.env.VITE_MEDIA_CLUB_API_BASE_URL;
 
@@ -20,7 +20,7 @@ const mediaClubApi = baseApi.injectEndpoints({
                 return errorData?.error?.message ?? "An unknown error occurred";
             }
         }),
-        getUsers: build.query<number[], undefined>({
+        getUsers: build.query<MediaClubUser[], undefined>({
             query: () => ({
                 url: `${BASE_URL}/users`,
                 method: 'GET'
@@ -53,4 +53,9 @@ const mediaClubApi = baseApi.injectEndpoints({
     }),
 });
 
-export const {useMediaClubMediaInfoQuery, useSyncAnilistUserMutation, useRemoveAnilistUserMutation} = mediaClubApi;
+export const {
+    useMediaClubMediaInfoQuery,
+    useGetUsersQuery,
+    useSyncAnilistUserMutation,
+    useRemoveAnilistUserMutation
+} = mediaClubApi;
