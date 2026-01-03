@@ -3,6 +3,7 @@ use crate::models::users::User;
 use crate::models::users::UsersRepository;
 use async_trait::async_trait;
 use aws_sdk_dynamodb::Client;
+use aws_sdk_dynamodb::error::SdkError;
 use std::sync::Arc;
 
 pub(crate) struct UsersRepo {
@@ -49,9 +50,17 @@ impl UsersRepository for UsersRepo {
             .put_item()
             .table_name(&self.table_name)
             .set_item(Some(item_attributes))
+            .condition_expression("attribute_not_exists(user_id)")
             .send()
             .await
-            .map_err(|e| MyError::Database(format!("DynamoDB PutItem Error: {}", e)))?;
+            .map_err(|e| {
+                if let SdkError::ServiceError(service_error) = &e {
+                    if service_error.err().is_conditional_check_failed_exception() {
+                        return MyError::Internal("User already exists".into());
+                    }
+                }
+                MyError::Internal(format!("DynamoDB PutItem Error: {}", e))
+            })?;
 
         Ok(())
     }

@@ -1,6 +1,9 @@
 import { Alert, AlertTitle, Avatar, Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import RegistrationPageBreadcrumbs from "./components/RegistrationPageBreadcrumbs";
 
+const CLIENT_ID = import.meta.env.VITE_ANILIST_APP_CLIENT_ID;
+const REDIRECT_URI = import.meta.env.VITE_ANILIST_APP_REDIRECT_URI;
+
 function RegistrationPage() {
     return (
         <Container maxWidth="lg">
@@ -60,9 +63,7 @@ function RegistrationPage() {
                             variant="contained"
                             startIcon={<Avatar src="/anilist.svg" />}
                             size="large"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href="https://anilist.co/api/v2/oauth/authorize"
+                            href={`https://anilist.co/api/v2/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`}
                             fullWidth
                             sx={{
                                 borderRadius: 8,

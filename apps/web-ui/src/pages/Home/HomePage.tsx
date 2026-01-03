@@ -20,13 +20,13 @@ function HomePage() {
     return (
         <>
             <Container maxWidth="lg">
-                <ImageList
-                    cols={isMobile ? 2 : 3}
-                    gap={isMobile ? 8 : 16}
-                >
-                    {mediaList?.map(media => {
-                        return (
-                            <Zoom in timeout={350} key={media.id} >
+                <Zoom in timeout={350}>
+                    <ImageList
+                        cols={isMobile ? 2 : 3}
+                        gap={isMobile ? 8 : 16}
+                    >
+                        {mediaList?.map(media => {
+                            return (
                                 <ImageListItem key={media.id} className="element-slight-hover">
                                     <img
                                         src={media.coverImage.extraLarge}
@@ -57,10 +57,10 @@ function HomePage() {
                                         style={{ borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' }}
                                     />
                                 </ImageListItem>
-                            </Zoom>
-                        );
-                    }) ?? []}
-                </ImageList>
+                            );
+                        }) ?? []}
+                    </ImageList>
+                </Zoom>
             </Container>
             <MediaInfoDrawer
                 mediaInfoDrawer={mediaInfoDrawer}
