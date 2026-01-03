@@ -69,7 +69,7 @@ impl UsersRepository for UsersRepo {
             .delete_item()
             .table_name(&self.table_name)
             .key("user_id", AttributeValue::N(user_id.to_string()))
-            .condition_expression("attribute_exists(id)")
+            .condition_expression("attribute_exists(user_id)")
             .send()
             .await
             .map_err(|e| {
