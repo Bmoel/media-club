@@ -11,7 +11,7 @@ pub enum MyError {
     #[error("AniList API error: {0}")]
     Anilist(String),
 
-    #[error("Database failure")]
+    #[error("Database failure: {0}")]
     Database(String),
 
     #[error("Network error: {0}")]
@@ -23,24 +23,42 @@ pub enum MyError {
 
 impl IntoResponse for MyError {
     fn into_response(self) -> Response {
-        tracing::error!(error = %self, "Operation failed");
-
-        let (status, message) = match self {
-            MyError::Anilist(ref msg) => (StatusCode::BAD_GATEWAY, msg.clone()),
-            MyError::Database(ref msg) => (StatusCode::INTERNAL_SERVER_ERROR, msg.clone()),
+        let (status, response_message, error_log_message) = match self {
+            MyError::Anilist(ref msg) => (
+                StatusCode::BAD_GATEWAY,
+                "Failed to reach out to Anilist".into(),
+                msg.clone()
+            ),
+            MyError::Database(ref msg) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Failed to reach out to database".into(),
+                msg.clone()
+            ),
             MyError::Network(_) => (
                 StatusCode::BAD_GATEWAY,
+                "Network connection failed".into(),
                 "External service unreachable".into(),
             ),
-            MyError::Internal(ref msg) => (StatusCode::INTERNAL_SERVER_ERROR, msg.clone()),
+            MyError::Internal(ref msg) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Media Club API failed".into(),
+                msg.clone()
+            ),
         };
+
+        tracing::error!(
+            error_type = %self, 
+            details = %error_log_message, 
+            status = %status.as_u16(),
+            "Request failed"
+        );
 
         let body = Json(ApiResponse::<()> {
             success: false,
             data: None,
             error: Some(ApiErrorDetail {
-                message,
-                code: status.as_str().to_string(),
+                message: response_message,
+                code: status.as_u16().to_string(),
             }),
         });
 
