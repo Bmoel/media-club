@@ -1,7 +1,7 @@
+use crate::errors::MyError;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
-use crate::errors::MyError;
 
 #[derive(Debug, Display, EnumString, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

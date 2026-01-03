@@ -1,5 +1,5 @@
-use serde::{Serialize, Deserialize};
 use crate::errors::MyError;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 struct GraphQLRequest {
@@ -30,9 +30,13 @@ pub async fn exchange_code_for_token(
         .map_err(|e| MyError::Network(e))?;
 
     #[derive(Deserialize)]
-    struct TokenResponse { access_token: String }
+    struct TokenResponse {
+        access_token: String,
+    }
 
-    let data: TokenResponse = res.json().await
+    let data: TokenResponse = res
+        .json()
+        .await
         .map_err(|_| MyError::Anilist("Invalid token response from AniList".into()))?;
 
     Ok(data.access_token)
@@ -60,7 +64,9 @@ pub async fn get_anilist_user_id(http: &reqwest::Client, token: &str) -> Result<
         .await
         .map_err(|e| MyError::Network(e))?;
 
-    let body: serde_json::Value = response.json().await
+    let body: serde_json::Value = response
+        .json()
+        .await
         .map_err(|_| MyError::Internal("Failed to parse AniList response".into()))?;
 
     let user_id = body["data"]["Viewer"]["id"]

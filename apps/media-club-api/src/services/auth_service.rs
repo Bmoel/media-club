@@ -1,11 +1,8 @@
-use crate::{errors::MyError, models::app::AppState};
-use axum::{extract::State};
 use crate::services::anilist_service;
+use crate::{errors::MyError, models::app::AppState};
+use axum::extract::State;
 
-pub async fn sync_user_profile(
-    state: State<AppState>,
-    auth_code: String,
-) -> Result<(), MyError> {
+pub async fn sync_user_profile(state: State<AppState>, auth_code: String) -> Result<(), MyError> {
     let client_id = std::env::var("ANILIST_CLIENT_APP_ID")
         .map_err(|_| MyError::Internal("Failed to find ANILIST_CLIENT_APP_ID".into()))?;
     let client_secret = std::env::var("ANILIST_CLIENT_APP_SECRET")
@@ -19,12 +16,10 @@ pub async fn sync_user_profile(
         &client_secret,
         &redirect_uri,
         &auth_code,
-    ).await?;
+    )
+    .await?;
 
-    let user_id = anilist_service::get_anilist_user_id(
-        &state.http_client,
-        &token
-    ).await?;
+    let user_id = anilist_service::get_anilist_user_id(&state.http_client, &token).await?;
 
     state.users_repository.add_user(&user_id).await?;
 

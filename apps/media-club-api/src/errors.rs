@@ -1,10 +1,10 @@
-use lambda_http::http::StatusCode;
+use crate::models::app::{ApiErrorDetail, ApiResponse};
 use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use lambda_http::http::StatusCode;
 use thiserror::Error;
-use crate::models::app::{ApiErrorDetail, ApiResponse};
 
 #[derive(Error, Debug)]
 pub enum MyError {
@@ -28,7 +28,10 @@ impl IntoResponse for MyError {
         let (status, message) = match self {
             MyError::Anilist(ref msg) => (StatusCode::BAD_GATEWAY, msg.clone()),
             MyError::Database(ref msg) => (StatusCode::INTERNAL_SERVER_ERROR, msg.clone()),
-            MyError::Network(_) => (StatusCode::BAD_GATEWAY, "External service unreachable".into()),
+            MyError::Network(_) => (
+                StatusCode::BAD_GATEWAY,
+                "External service unreachable".into(),
+            ),
             MyError::Internal(ref msg) => (StatusCode::INTERNAL_SERVER_ERROR, msg.clone()),
         };
 
