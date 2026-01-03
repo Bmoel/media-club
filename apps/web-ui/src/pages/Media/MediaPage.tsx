@@ -5,7 +5,6 @@ import useConfig from "../../hooks/useConfig";
 import { useMemo, useState } from "react";
 import MediaPageBreadcrumbs from "./components/MediaPageBreadcrumbs";
 import MediaScoreImageBox from "./components/MediaScoreImageBox";
-import useGetUsers from "../../hooks/useGetUsers";
 import { type AnilistUser } from "../../api/anilist/anilistApi.types";
 
 function MediaPage() {
@@ -13,7 +12,6 @@ function MediaPage() {
     const { id } = useParams();
     const { isMobile } = useConfig();
     const mediaInfo = useGetMedia(Number(id));
-    const { users } = useGetUsers();
 
     const averageScoreBoxesGridSize: number = useMemo(() => isMobile ? 12 : 6, [isMobile]);
 
@@ -52,7 +50,7 @@ function MediaPage() {
                                         '&::-webkit-scrollbar': { display: 'none' }
                                     }}
                                 >
-                                    {users.map((user) => (
+                                    {[{ name: 'TEST', id: 1, avatar: { medium: '/chuuniland.svg' } }].map((user) => (
                                         <Box
                                             key={user.name}
                                             onClick={() => setSelectedUser(user)}
