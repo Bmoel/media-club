@@ -10,6 +10,7 @@ use std::sync::Arc;
 pub struct AppState {
     pub media_repository: Arc<dyn MediaRepository + Send + Sync>,
     pub users_repository: Arc<dyn UsersRepository + Send + Sync>,
+    pub http_client: reqwest::Client,
 }
 
 #[derive(Serialize)]

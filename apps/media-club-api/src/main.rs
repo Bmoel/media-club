@@ -2,6 +2,7 @@ use lambda_http::{run, Error};
 
 mod config;
 mod db;
+mod errors;
 mod models;
 mod routes;
 mod services;

@@ -1,26 +1,16 @@
 use crate::models::{
-    app::{ApiErrorDetail, ApiResponse, AppState},
+    app::{ApiResponse, AppState},
     users::User,
 };
-use axum::{extract::State, http::StatusCode};
+use axum::{extract::State, Json};
+use crate::errors::MyError;
 
-pub async fn users_route(State(state): State<AppState>) -> ApiResponse<Vec<User>> {
-    match state.users_repository.get_users().await {
-        Ok(items) => ApiResponse {
-            success: true,
-            data: Some(items),
-            error: None,
-        },
-        Err(err) => {
-            tracing::error!(error = %err, "Database operation failed");
-            ApiResponse {
-                success: false,
-                data: None,
-                error: Some(ApiErrorDetail {
-                    code: StatusCode::INTERNAL_SERVER_ERROR.to_string(),
-                    message: "Failed to fetch users info".to_string(),
-                }),
-            }
-        }
-    }
+pub async fn users_route(State(state): State<AppState>) -> Result<Json<ApiResponse<Vec<User>>>, MyError> {
+    let users = state.users_repository.get_users().await?;
+
+    Ok(Json(ApiResponse {
+        success: true,
+        data: Some(users),
+        error: None,
+    }))
 }
