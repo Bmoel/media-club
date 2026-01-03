@@ -18,6 +18,6 @@ export type MediaClubMedia = {
 
 export type MediaClubMediaResponse = MediaClubApiResponse<Array<MediaClubMedia>>;
 
-export type SyncAnilistUserRequest = { anilistId: number };
+export type SyncAnilistUserRequest = { code: string };
 
 export type SyncAnilistUserResponse = MediaClubApiResponse<null>;

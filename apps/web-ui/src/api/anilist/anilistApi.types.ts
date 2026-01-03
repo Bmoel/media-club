@@ -40,9 +40,3 @@ export type AnilistMediaInfoResponseData = {
 }
 
 export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseData>;
-
-export type AnilistGetUserInfo = {
-    id: number;
-};
-
-export type AnilistGetUserResponse = AnilistResponse<AnilistGetUserInfo>;

@@ -4,6 +4,7 @@ mod config;
 mod db;
 mod models;
 mod routes;
+mod services;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {

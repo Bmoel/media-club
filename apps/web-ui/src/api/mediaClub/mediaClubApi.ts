@@ -1,6 +1,6 @@
 import { baseApi } from "../baseApi";
 import { MEDIA_CLUB_MEDIA_TAG } from "./mediaClubApi.tags";
-import type { MediaClubMediaResponse, SyncAnilistUserRequest, SyncAnilistUserResponse } from "./mediaClubApi.types";
+import type { MediaClubMediaResponse, SyncAnilistUserRequest } from "./mediaClubApi.types";
 
 const BASE_URL = import.meta.env.VITE_MEDIA_CLUB_API_BASE_URL;
 
@@ -21,14 +21,11 @@ const mediaClubApi = baseApi.injectEndpoints({
             }
         }),
         syncAnilistUser: build.mutation<boolean, SyncAnilistUserRequest>({
-            query: ({ anilistId }) => ({
+            query: ({ code }) => ({
                 url: `${BASE_URL}/auth/sync`,
                 method: 'POST',
-                body: { anilistId },
-            }),
-            transformResponse: (response: SyncAnilistUserResponse) => {
-                return response.success;
-            },
+                body: { code },
+            })
             //TODO: Add invalidatesTags for users query once that is made
         }),
     }),
