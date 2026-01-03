@@ -1,10 +1,21 @@
-import { Alert, AlertTitle, Avatar, Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Link, Stack, Typography } from "@mui/material";
 import RegistrationPageBreadcrumbs from "./components/RegistrationPageBreadcrumbs";
+import { useCallback, useState } from "react";
+import type { AuthMode } from "../Auth/AuthCallback";
 
 const CLIENT_ID = import.meta.env.VITE_ANILIST_APP_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_ANILIST_APP_REDIRECT_URI;
 
 function RegistrationPage() {
+    const [confirmationModalOpen, setConfirmationModalOpen] = useState<boolean>(false);
+
+    const handleRedirect = useCallback((mode: AuthMode) => {
+        const oauthState = crypto.randomUUID();
+        sessionStorage.setItem('oauth_state', oauthState);
+        const url = `https://anilist.co/api/v2/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=${mode}_${oauthState}`;
+        window.location.href = url;
+    }, []);
+
     return (
         <Container maxWidth="lg">
             <Stack spacing={2}>
@@ -63,7 +74,7 @@ function RegistrationPage() {
                             variant="contained"
                             startIcon={<Avatar src="/anilist.svg" />}
                             size="large"
-                            href={`https://anilist.co/api/v2/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`}
+                            onClick={() => handleRedirect('sync')}
                             fullWidth
                             sx={{
                                 borderRadius: 8,
@@ -76,10 +87,49 @@ function RegistrationPage() {
                         >
                             Connect with Anilist
                         </Button>
+                        <Link
+                            component="button"
+                            variant="body2"
+                            color="error"
+                            underline="always"
+                            fontWeight="bold"
+                            onClick={() => setConfirmationModalOpen(true)}
+                        >
+                            I want to remove myself from the media club
+                        </Link>
                     </Stack>
                 </Grid>
             </Stack>
-        </Container>
+            <Dialog
+                open={confirmationModalOpen}
+                onClose={() => setConfirmationModalOpen(false)}
+                aria-labelledby="Removal Confirmation"
+                aria-describedby="Modal to confirm removal of user"
+                slotProps={{ paper: { sx: { borderRadius: 2, p: 1 } } }}
+            >
+                <DialogTitle sx={{ fontWeight: 'bold' }}>
+                    Removal Confirmation
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="body2" color="text.secondary">
+                        Are you sure you want to remove yourself?
+                    </Typography>
+                </DialogContent>
+                <DialogActions sx={{ flexDirection: { xs: 'column-reverse', sm: 'row' }, gap: 1, px: 3, pb: 2 }}>
+                    <Button onClick={() => setConfirmationModalOpen(false)} sx={{ color: 'grey.600' }}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        sx={{ boxShadow: 'none', '&:hover': { boxShadow: 'none', bgcolor: 'error.dark' } }}
+                        onClick={() => handleRedirect('remove')}
+                    >
+                        Confirm Removal
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Container >
     );
 }
 
