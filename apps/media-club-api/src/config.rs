@@ -33,9 +33,14 @@ pub async fn startup_app_state() -> Result<AppState, lambda_http::Error> {
     };
 
     let client = Arc::new(Client::new(&config));
+    let http_client = reqwest::Client::builder()
+        .user_agent("MediaClub-API/1.0")
+        .build()
+        .expect("Failed to create reqwest client");
 
     Ok(AppState {
         media_repository: Arc::new(MediaRepo::new(Arc::clone(&client), media_table)),
         users_repository: Arc::new(UsersRepo::new(Arc::clone(&client), users_table)),
+        http_client: http_client,
     })
 }
