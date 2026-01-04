@@ -4,7 +4,7 @@ import { Info } from "@mui/icons-material";
 import useConfig from "../../hooks/useConfig";
 import MediaInfoDrawer from "../../components/MediaInfoDrawer";
 import type { MediaInfoDrawerType } from "../../types/drawers.types";
-import useAnilistMediaQuery from "../../hooks/useAnilistMediaQuery";
+import useAnilistHomeMedia from "../../hooks/useAnilistHomeMedia";
 import { useNavigate } from "react-router";
 
 function HomePage() {
@@ -15,7 +15,7 @@ function HomePage() {
 
     const { isMobile } = useConfig();
     const navigate = useNavigate();
-    const mediaList = useAnilistMediaQuery();
+    const mediaList = useAnilistHomeMedia();
 
     return (
         <>

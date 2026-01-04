@@ -8,11 +8,11 @@ const BASE_URL: string = 'https://graphql.anilist.co';
 const anilistApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
         anilistMediaInfo: build.query<AnilistMediaInfo[], AnilistMediaInfoRequest>({
-            query: (body) => ({
+            query: (vars) => ({
                 url: BASE_URL,
                 body: {
                     query: MediaInfoQuery,
-                    variables: body,
+                    variables: vars,
                 },
                 method: 'POST',
             }),
@@ -24,17 +24,17 @@ const anilistApi = baseApi.injectEndpoints({
             },
             providesTags: () => [ANILIST_MEDIA_INFO_TAG],
         }),
-        anilistMediaListWithUsersQuery: build.query<AnilistUser[], AnilistUserInfoRequest>({
-            query: (requestInfo) => ({
+        anilistUsersMediaInfo: build.query<AnilistUser[], AnilistUserInfoRequest>({
+            query: (vars) => ({
                 url: BASE_URL,
                 body: {
                     query: MediaListWithUsersQuery,
-                    variables: requestInfo.variables,
+                    variables: vars,
                 },
                 method: 'POST',
             }),
             transformResponse: (response: AnilistUserInfoResponse) => {
-                return Object.values(response.data).map(user => user);
+                return Object.values(response.data.Page.mediaList).map(user => user);
             },
             transformErrorResponse: (response: {status: number, data: AnilistMediaInfoResponse}) => {
                 return response.data.errors;
@@ -44,4 +44,4 @@ const anilistApi = baseApi.injectEndpoints({
     })
 });
 
-export const {useAnilistMediaInfoQuery} = anilistApi;
+export const {useAnilistMediaInfoQuery, useAnilistUsersMediaInfoQuery} = anilistApi;

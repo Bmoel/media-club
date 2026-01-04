@@ -2,7 +2,7 @@ import { useAnilistMediaInfoQuery } from "../api/anilist/anilistApi";
 import { useMediaClubMediaInfoQuery } from "../api/mediaClub/mediaClubApi";
 import type { Media } from "../types/media.types";
 
-function useAnilistMediaQuery(): Media[] | undefined {
+function useAnilistHomeMedia(): Media[] | undefined {
     const {data: mediaClubMediaInfo} = useMediaClubMediaInfoQuery(undefined);
 
     const {data: anilistMediaInfo} = useAnilistMediaInfoQuery(
@@ -32,4 +32,4 @@ function useAnilistMediaQuery(): Media[] | undefined {
     });
 }
 
-export default useAnilistMediaQuery;
+export default useAnilistHomeMedia;

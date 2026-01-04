@@ -6,7 +6,7 @@ export type AnilistResponse<T> = {
 }
 
 export type AnilistMediaInfoRequest = {
-    idIn: number|string[];
+    idIn: string[];
     sort: string;
 }
 
@@ -42,16 +42,28 @@ export type AnilistMediaInfoResponseData = {
 export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseData>;
 
 export type AnilistUser = {
-    id: number;
-    name: string;
-    avatar: {
-        medium: string,
-    };
+    score: number;
+    user: {
+        avatar: {
+            medium: string;
+        };
+        bannerImage: string;
+        name: string;
+        siteUrl: string;
+        id: number;
+    }
+}
+
+export type AnilistUsersInfoResponseData = {
+    Page: {
+        mediaList: Record<string, AnilistUser>
+    }
 }
 
 export type AnilistUserInfoRequest = {
-    query: string;
-    variables: Record<string, number>;
+    idIn: number[];
+    mediaId: number;
+    format: "POINT_100"
 }
 
-export type AnilistUserInfoResponse = AnilistResponse<Record<string, AnilistUser>>;
+export type AnilistUserInfoResponse = AnilistResponse<AnilistUsersInfoResponseData>;

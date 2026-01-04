@@ -30,9 +30,9 @@ query MediaInfoQuery($idIn: [Int], $sort: [MediaSort]) {
 `;
 
 export const MediaListWithUsersQuery = `
-query MediaList($userIdIn: [Int], $mediaId: Int, $format: ScoreFormat) {
+query MediaList($idIn: [Int], $mediaId: Int, $format: ScoreFormat) {
   Page {
-    mediaList(userId_in: $userIdIn, mediaId: $mediaId) {
+    mediaList(userId_in: $idIn, mediaId: $mediaId) {
       score(format: $format)
       user {
         avatar {
