@@ -10,27 +10,29 @@ export type AnilistMediaInfoRequest = {
     sort: string;
 }
 
+export type AnilistDate = {
+    month?: number,
+    year?: number,
+    day?: number,
+}
+
 export type AnilistMediaInfo = {
     id: number;
-    idMal: number;
+    idMal?: number;
     title: {
-        english: string,
-        native: string,
+        english?: string,
+        native?: string,
     };
     coverImage: {
-        extraLarge: string;
+        extraLarge?: string;
     };
-    bannerImage: string;
-    averageScore: number;
-    siteUrl: string;
+    bannerImage?: string;
+    averageScore?: number;
+    siteUrl?: string;
     studios: {
-        nodes: {name: string}[];
+        nodes?: {name: string}[];
     };
-    startDate: {
-        month: number,
-        year: number,
-        day: number,
-    };
+    startDate: AnilistDate;
 };
 
 export type AnilistMediaInfoResponseData = {
@@ -42,14 +44,14 @@ export type AnilistMediaInfoResponseData = {
 export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseData>;
 
 export type AnilistUser = {
-    score: number;
+    score?: number;
     user: {
         avatar: {
-            medium: string;
+            medium?: string;
         };
-        bannerImage: string;
-        name: string;
-        siteUrl: string;
+        bannerImage?: string;
+        name?: string;
+        siteUrl?: string;
         id: number;
     }
 }

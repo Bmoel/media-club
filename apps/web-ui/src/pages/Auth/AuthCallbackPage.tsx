@@ -9,7 +9,7 @@ const isValidAuthMode = (mode: string | null): mode is AuthMode => {
     return mode === 'sync' || mode === 'remove';
 };
 
-function AuthCallback() {
+function AuthCallbackPage() {
     const [loadingText, setLoadingText] = useState<string>('');
 
     const navigate = useNavigate();
@@ -66,4 +66,4 @@ function AuthCallback() {
     );
 }
 
-export default AuthCallback;
+export default AuthCallbackPage;

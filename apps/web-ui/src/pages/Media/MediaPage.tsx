@@ -24,10 +24,15 @@ function MediaPage() {
             return '-';
         }
         let total = 0;
+        let totalUsers = 0;
         anilistUsers.forEach(user => {
-            total += user.score;
+            const score = user?.score;
+            if (typeof score === 'number') {
+                total += score;
+                totalUsers += 1;
+            }
         });
-        return Math.ceil(total / anilistUsers.length).toString();
+        return totalUsers === 0 ? '-' : Math.ceil(total / totalUsers).toString();
     }, [anilistUsers]);
 
     return (
@@ -40,7 +45,7 @@ function MediaPage() {
                             <MediaScoreImageBox
                                 mediaSrc={mediaInfo?.coverImage.extraLarge ?? ''}
                                 titleText="Anilist Average Score"
-                                scoreText={`${mediaInfo?.averageScore.toString() ?? '-'} / 100`}
+                                scoreText={`${mediaInfo?.averageScore?.toString() ?? '-'} / 100`}
                             />
                         </Grid>
                         <Grid size={averageScoreBoxesGridSize}>

@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Link, Stack, Typography } from "@mui/material";
 import RegistrationPageBreadcrumbs from "./components/RegistrationPageBreadcrumbs";
 import { useCallback, useState } from "react";
-import type { AuthMode } from "../Auth/AuthCallback";
+import type { AuthMode } from "../Auth/AuthCallbackPage";
 
 const CLIENT_ID = import.meta.env.VITE_ANILIST_APP_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_ANILIST_APP_REDIRECT_URI;

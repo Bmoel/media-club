@@ -31,7 +31,7 @@ function HomePage() {
                                     <img
                                         src={media.coverImage.extraLarge}
                                         style={{ borderRadius: '10px', cursor: 'pointer' }}
-                                        alt={`${media.title.english} cover image`}
+                                        alt={`${media.title.english ?? 'anime'} cover image`}
                                         onClick={() => {
                                             if (isNaN(media.id)) {
                                                 return;
@@ -40,8 +40,8 @@ function HomePage() {
                                         }}
                                     />
                                     <ImageListItemBar
-                                        title={media.title.english}
-                                        subtitle={media.title.native}
+                                        title={media.title.english ?? media.title.native ?? 'N/A'}
+                                        subtitle={(media.title.english === undefined) ? undefined : (media.title.native ?? '')}
                                         actionIcon={
                                             <IconButton
                                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
