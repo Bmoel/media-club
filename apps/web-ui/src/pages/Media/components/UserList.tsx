@@ -1,7 +1,9 @@
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import type { AnilistUser } from "../../../api/anilist/anilistApi.types";
 import { useCallback, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import MemberSkeleton from "../../../components/skeleton/MemberSkeleton";
+import { Info } from "@mui/icons-material";
+import useConfig from "../../../hooks/useConfig";
 
 interface UserListInterface {
     anilistUsers: AnilistUser[] | undefined;
@@ -30,6 +32,8 @@ function UserListStack({ children }: { children: ReactNode }) {
 function UserList(props: UserListInterface) {
     const { anilistUsers, selectedUser, setSelectedUser, dataIsLoading } = props;
 
+    const { isMobile } = useConfig();
+
     const onUserSelection = useCallback((newUser: AnilistUser) => {
         if (setSelectedUser === undefined) {
             return;
@@ -50,10 +54,20 @@ function UserList(props: UserListInterface) {
     }
 
     return (
-        <Box sx={{ mb: 3 }}>
-            <Typography variant="overline" sx={{ color: 'text.secondary', ml: 1 }}>
-                Members
-            </Typography>
+        <Box>
+            <Stack direction="row" alignItems="center">
+                <Typography variant="overline" sx={{ color: 'text.secondary', ml: 1 }}>
+                    Members
+                </Typography>
+                <Tooltip
+                    title="Will show available members who have this media in their Anilist"
+                    placement={isMobile ? 'bottom-end' : 'right-start'}
+                >
+                    <IconButton size="small">
+                        <Info />
+                    </IconButton>
+                </Tooltip>
+            </Stack>
             {anilistUsers === undefined ? (
                 <Typography
                     variant="body1"

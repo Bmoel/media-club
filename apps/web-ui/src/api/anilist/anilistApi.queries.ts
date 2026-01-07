@@ -34,6 +34,7 @@ query MediaList($idIn: [Int], $mediaId: Int, $format: ScoreFormat) {
   Page {
     mediaList(userId_in: $idIn, mediaId: $mediaId) {
       score(format: $format)
+      notes
       user {
         avatar {
           medium

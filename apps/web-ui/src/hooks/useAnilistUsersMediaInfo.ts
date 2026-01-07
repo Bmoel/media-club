@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { useAnilistUsersMediaInfoQuery } from "../api/anilist/anilistApi";
 import type { AnilistUserInfoRequest } from "../api/anilist/anilistApi.types";
 
-function useAnilistUsersMediaInfo(mediaId: number) {
-    const { data: usersData } = useGetUsersQuery(undefined);
+function useAnilistUsersMediaInfo(mediaId: number, skipQuery: boolean) {
+    const { data: usersData } = useGetUsersQuery(undefined, {skip: skipQuery});
 
     const queryArgs: AnilistUserInfoRequest | undefined = useMemo(() => {
         if (usersData === undefined || usersData.length === 0) {

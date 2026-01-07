@@ -45,6 +45,7 @@ export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseD
 
 export type AnilistUser = {
     score?: number;
+    notes?: string;
     user: {
         avatar: {
             medium?: string;
