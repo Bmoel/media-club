@@ -61,7 +61,7 @@ function AuthCallbackPage() {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 10 }}>
             <CircularProgress size={60} sx={{ mb: 2 }} />
-            <Typography variant="h6">{loadingText}</Typography>
+            <Typography variant="h6" align="center">{loadingText}</Typography>
         </Box>
     );
 }

@@ -16,7 +16,7 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
     const { isMobile } = useConfig();
     const formatDate = useDateFormat();
 
-    const media = useGetMedia(mediaInfoDrawer?.id);
+    const { media } = useGetMedia(mediaInfoDrawer?.id);
 
     const stackCss: SxProps<Theme> = useMemo(() => {
         return isMobile ? { margin: '10px' } : { width: '400px', margin: '10px' };
@@ -74,7 +74,7 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                         )}
                         {(typeof media.startDate.month === 'number') && (typeof media.startDate.day === 'number') && (typeof media.startDate.year === 'number') && (
                             <>
-                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Anime start date</Typography>
+                                <Typography variant="overline" color="text.secondary">Anime start date</Typography>
                                 <Typography variant="body1" fontWeight="bold">
                                     {formatDate(new Date(media.startDate.year, media.startDate.month, media.startDate.day))}
                                 </Typography>
@@ -82,25 +82,25 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                         )}
                         {media.media_club_date_started && (
                             <>
-                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Media Club start date</Typography>
+                                <Typography variant="overline" color="text.secondary">Media Club start date</Typography>
                                 <Typography variant="body1" fontWeight="bold">{formatDate(media.media_club_date_started)}</Typography>
                             </>
                         )}
                         {media.media_club_date_finished && (
                             <>
-                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Media Club end date</Typography>
+                                <Typography variant="overline" color="text.secondary">Media Club end date</Typography>
                                 <Typography variant="body1" fontWeight="bold">{formatDate(media.media_club_date_finished)}</Typography>
                             </>
                         )}
                         {typeof media.averageScore === 'number' && (
                             <>
-                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Anilist average score</Typography>
+                                <Typography variant="overline" color="text.secondary">Anilist average score</Typography>
                                 <Typography variant="body1" fontWeight="bold">{`${media.averageScore} / 100`}</Typography>
                             </>
                         )}
                         {Array.isArray(media.studios.nodes) && (
                             <>
-                                <Typography fontWeight="bold" variant="overline" color="text.secondary">Animation Studios</Typography>
+                                <Typography variant="overline" color="text.secondary">Animation Studios</Typography>
                                 {media.studios.nodes.map((studioInfo, idx) => {
                                     return <Typography variant="body1" fontWeight="bold" key={`studio-name-${idx}`}>{studioInfo.name}</Typography>;
                                 })}

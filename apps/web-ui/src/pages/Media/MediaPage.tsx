@@ -1,8 +1,8 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useGetMedia from "../../hooks/useGetMedia";
 import { Container, Fade, Grid, Stack, Typography } from "@mui/material";
 import useConfig from "../../hooks/useConfig";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MediaPageBreadcrumbs from "./components/MediaPageBreadcrumbs";
 import MediaScoreImageBox from "./components/MediaScoreImageBox";
 import { type AnilistUser } from "../../api/anilist/anilistApi.types";
@@ -14,8 +14,9 @@ function MediaPage() {
 
     const { id } = useParams();
     const { isMobile } = useConfig();
-    const mediaInfo = useGetMedia(Number(id));
-    const { data: anilistUsers } = useAnilistUsersMediaInfo(Number(id));
+    const { media, mediaIsLoading } = useGetMedia(Number(id));
+    const { data: anilistUsers, isFetching } = useAnilistUsersMediaInfo(Number(id));
+    const navigate = useNavigate();
 
     const averageScoreBoxesGridSize: number = useMemo(() => isMobile ? 12 : 6, [isMobile]);
 
@@ -35,17 +36,23 @@ function MediaPage() {
         return totalUsers === 0 ? '-' : Math.ceil(total / totalUsers).toString();
     }, [anilistUsers]);
 
+    useEffect(() => {
+        if (!mediaIsLoading && !media) {
+            navigate('/');
+        }
+    }, [media, mediaIsLoading, navigate]);
+
     return (
         <Container maxWidth="lg">
             <Fade in timeout={800}>
                 <Stack spacing={2}>
-                    <MediaPageBreadcrumbs mediaInfo={mediaInfo} />
+                    <MediaPageBreadcrumbs mediaInfo={media} />
                     <Grid container spacing={2}>
                         <Grid size={averageScoreBoxesGridSize}>
                             <MediaScoreImageBox
-                                mediaSrc={mediaInfo?.coverImage.extraLarge ?? ''}
+                                mediaSrc={media?.coverImage.extraLarge ?? ''}
                                 titleText="Anilist Average Score"
-                                scoreText={`${mediaInfo?.averageScore?.toString() ?? '-'} / 100`}
+                                scoreText={`${media?.averageScore?.toString() ?? '-'} / 100`}
                             />
                         </Grid>
                         <Grid size={averageScoreBoxesGridSize}>
@@ -60,6 +67,7 @@ function MediaPage() {
                                 anilistUsers={anilistUsers}
                                 selectedUser={selectedUser}
                                 setSelectedUser={setSelectedUser}
+                                dataIsLoading={isFetching}
                             />
                         </Grid>
                         {(selectedUser !== undefined) && (

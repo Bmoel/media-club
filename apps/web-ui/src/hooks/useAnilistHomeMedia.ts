@@ -2,8 +2,8 @@ import { useAnilistMediaInfoQuery } from "../api/anilist/anilistApi";
 import { useMediaClubMediaInfoQuery } from "../api/mediaClub/mediaClubApi";
 import type { Media } from "../types/media.types";
 
-function useAnilistHomeMedia(): Media[] | undefined {
-    const {data: mediaClubMediaInfo} = useMediaClubMediaInfoQuery(undefined);
+function useAnilistHomeMedia(): {mediaList: Media[] | undefined, mediaListIsLoading: boolean} {
+    const {data: mediaClubMediaInfo, isLoading} = useMediaClubMediaInfoQuery(undefined);
 
     const {data: anilistMediaInfo} = useAnilistMediaInfoQuery(
         {
@@ -15,11 +15,7 @@ function useAnilistHomeMedia(): Media[] | undefined {
         }
     );
 
-    if (!anilistMediaInfo) {
-        return undefined;
-    }
-
-    return anilistMediaInfo.map(info => {
+    const mediaList = anilistMediaInfo?.map(info => {
         const mediaClubInfoObj = mediaClubMediaInfo?.find(mInfo => info.id === mInfo.id);
         const mClubStartDate = mediaClubInfoObj?.date_started;
         const mClubEndDate = mediaClubInfoObj?.date_finished;
@@ -30,6 +26,8 @@ function useAnilistHomeMedia(): Media[] | undefined {
             media_club_status: mediaClubInfoObj?.status ?? 'completed',
         };
     });
+
+    return {mediaList, mediaListIsLoading: isLoading};
 }
 
 export default useAnilistHomeMedia;

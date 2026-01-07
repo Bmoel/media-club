@@ -2,12 +2,15 @@ import { Alert, AlertTitle, Avatar, Box, Button, Container, Dialog, DialogAction
 import RegistrationPageBreadcrumbs from "./components/RegistrationPageBreadcrumbs";
 import { useCallback, useState } from "react";
 import type { AuthMode } from "../Auth/AuthCallbackPage";
+import useConfig from "../../hooks/useConfig";
 
 const CLIENT_ID = import.meta.env.VITE_ANILIST_APP_CLIENT_ID;
 const REDIRECT_URI = import.meta.env.VITE_ANILIST_APP_REDIRECT_URI;
 
 function RegistrationPage() {
     const [confirmationModalOpen, setConfirmationModalOpen] = useState<boolean>(false);
+
+    const { isMobile } = useConfig();
 
     const handleRedirect = useCallback((mode: AuthMode) => {
         const oauthState = crypto.randomUUID();
@@ -23,11 +26,11 @@ function RegistrationPage() {
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Box sx={{ position: 'relative' }}>
                         <Box sx={{
-                            height: 400,
+                            height: isMobile ? 325 : 400,
                             borderRadius: 4,
                             overflow: 'hidden',
                             position: 'relative',
-                            boxShadow: 10
+                            boxShadow: isMobile ? 5 : 10,
                         }}>
                             <Box
                                 sx={{
