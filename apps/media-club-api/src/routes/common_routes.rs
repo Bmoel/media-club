@@ -1,5 +1,5 @@
 use crate::models::app::{ApiErrorDetail, ApiResponse};
-use axum::{http::{StatusCode}, Json};
+use axum::{http::StatusCode, Json};
 
 pub async fn welcome_route() -> Json<ApiResponse<String>> {
     Json(ApiResponse {

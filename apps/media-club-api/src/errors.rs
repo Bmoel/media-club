@@ -27,12 +27,12 @@ impl IntoResponse for MyError {
             MyError::Anilist(ref msg) => (
                 StatusCode::BAD_GATEWAY,
                 "Failed to reach out to Anilist".into(),
-                msg.clone()
+                msg.clone(),
             ),
             MyError::Database(ref msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Failed to reach out to database".into(),
-                msg.clone()
+                msg.clone(),
             ),
             MyError::Network(_) => (
                 StatusCode::BAD_GATEWAY,
@@ -42,13 +42,13 @@ impl IntoResponse for MyError {
             MyError::Internal(ref msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Media Club API failed".into(),
-                msg.clone()
+                msg.clone(),
             ),
         };
 
         tracing::error!(
-            error_type = %self, 
-            details = %error_log_message, 
+            error_type = %self,
+            details = %error_log_message,
             status = %status.as_u16(),
             "Request failed"
         );
