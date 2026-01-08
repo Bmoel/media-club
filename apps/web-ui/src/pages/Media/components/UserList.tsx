@@ -1,32 +1,16 @@
 import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import type { AnilistUser } from "../../../api/anilist/anilistApi.types";
-import { useCallback, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { useCallback, type Dispatch, type SetStateAction } from "react";
 import MemberSkeleton from "../../../components/skeleton/MemberSkeleton";
 import { Info } from "@mui/icons-material";
 import useConfig from "../../../hooks/useConfig";
+import UserListStack from "./UserListStack";
 
 interface UserListInterface {
     anilistUsers: AnilistUser[] | undefined;
     selectedUser?: AnilistUser;
     setSelectedUser?: Dispatch<SetStateAction<AnilistUser | undefined>>;
     dataIsLoading: boolean;
-}
-
-function UserListStack({ children }: { children: ReactNode }) {
-    return (
-        <Stack
-            direction="row"
-            spacing={2}
-            sx={{
-                overflowX: 'auto',
-                py: 1,
-                px: 1,
-                '&::-webkit-scrollbar': { display: 'none' }
-            }}
-        >
-            {children}
-        </Stack>
-    );
 }
 
 function UserList(props: UserListInterface) {

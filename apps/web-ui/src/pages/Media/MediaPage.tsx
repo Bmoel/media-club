@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import useGetMedia from "../../hooks/useGetMedia";
-import { Avatar, Box, Chip, Container, Fade, Grid, Link, Stack, Typography } from "@mui/material";
+import { Box, Container, Fade, Grid, Stack, Typography } from "@mui/material";
 import useConfig from "../../hooks/useConfig";
 import { useEffect, useMemo, useState } from "react";
 import MediaPageBreadcrumbs from "./components/MediaPageBreadcrumbs";
@@ -8,6 +8,8 @@ import MediaScoreImageBox from "./components/MediaScoreImageBox";
 import { type AnilistUser } from "../../api/anilist/anilistApi.types";
 import useAnilistUsersMediaInfo from "../../hooks/useAnilistUsersMediaInfo";
 import UserList from "./components/UserList";
+import MediaMemberInfoStack from "./components/MediaMemberInfoStack";
+import AnilistChip from "../../components/AnilistChip";
 
 function MediaPage() {
     const [selectedUser, setSelectedUser] = useState<AnilistUser | undefined>(undefined);
@@ -51,18 +53,10 @@ function MediaPage() {
                 <Stack spacing={2}>
                     <MediaPageBreadcrumbs mediaInfo={media} />
                     <Box>
-                        <Chip
-                            avatar={<Avatar src={'/anilist.svg'} />}
-                            component={Link}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <AnilistChip
+                            label="Anilist Page"
                             href={media?.siteUrl}
-                            label={<Typography variant="overline">Anilist Page</Typography>}
-                            color="info"
-                            variant="outlined"
-                            sx={{ background: 'black' }}
-                            aria-label={`Visit anilist page for ${media?.title.english ?? media?.title.native}`}
-                            clickable
+                            ariaLabel={`Visit anilist page for ${media?.title.english ?? media?.title.native}`}
                         />
                     </Box>
                     <Grid container spacing={2}>
@@ -91,45 +85,20 @@ function MediaPage() {
                         {(selectedUser !== undefined) && (
                             <>
                                 <Grid size={12}>
-                                    <Chip
-                                        avatar={<Avatar src={'/anilist.svg'} />}
-                                        component={Link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <AnilistChip
+                                        label="Anilist Profile"
                                         href={selectedUser.user.siteUrl}
-                                        label={<Typography variant="overline">Anilist Profile</Typography>}
-                                        color="info"
-                                        variant="outlined"
-                                        sx={{ background: 'black' }}
-                                        aria-label="Visit anilist profile for the selected user"
-                                        clickable
+                                        ariaLabel="Visit anilist profile for the selected user"
                                     />
                                 </Grid>
                                 <Grid size={isMobile ? 12 : 6}>
-                                    <Stack
-                                        spacing={1}
-                                        alignItems="center"
-                                        border="1px solid"
-                                        borderColor="divider"
-                                        borderRadius="8px"
-                                        height={'100%'}
-                                        display="flex"
-                                    >
+                                    <MediaMemberInfoStack>
                                         <Typography variant="overline" color="text.secondary">USER SCORE</Typography>
                                         <Typography variant="h2" color="primary">{selectedUser.score ?? '-'}</Typography>
-                                    </Stack>
+                                    </MediaMemberInfoStack>
                                 </Grid>
                                 <Grid size={isMobile ? 12 : 6}>
-                                    <Stack
-                                        spacing={1}
-                                        alignItems="center"
-                                        border="1px solid"
-                                        borderColor="divider"
-                                        borderRadius="8px"
-                                        height={'100%'}
-                                        display="flex"
-                                        px={3}
-                                    >
+                                    <MediaMemberInfoStack>
                                         <Typography variant="overline" color="text.secondary">REVIEW & NOTES</Typography>
                                         <Typography
                                             variant="body1"
@@ -139,7 +108,20 @@ function MediaPage() {
                                         >
                                             "{selectedUser.notes ?? "No notes have been provided for this title"}"
                                         </Typography>
-                                    </Stack>
+                                    </MediaMemberInfoStack>
+                                </Grid>
+                                <Grid size={isMobile ? 12 : 6}>
+                                    <MediaMemberInfoStack>
+                                        <Typography variant="overline" color="text.secondary">FAVORITE CHARACTERS</Typography>
+                                        <Typography
+                                            variant="body1"
+                                            fontStyle="italic"
+                                            alignItems="center"
+                                            textAlign="center"
+                                        >
+                                            "{selectedUser.notes ?? "No notes have been provided for this title"}"
+                                        </Typography>
+                                    </MediaMemberInfoStack>
                                 </Grid>
                             </>
                         )}
