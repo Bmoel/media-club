@@ -21,8 +21,8 @@ function useAnilistHomeMedia(): {mediaList: Media[] | undefined, mediaListIsLoad
         const mClubEndDate = mediaClubInfoObj?.date_finished;
         return {
             ...info,
-            media_club_date_started: typeof mClubStartDate === 'string' ? new Date(mClubStartDate) : undefined,
-            media_club_date_finished: typeof mClubEndDate === 'string' ? new Date(mClubEndDate) : undefined,
+            media_club_date_started: (typeof mClubStartDate === 'string' && mClubStartDate !== '') ? new Date(mClubStartDate) : undefined,
+            media_club_date_finished: (typeof mClubEndDate === 'string' && mClubEndDate !== '') ? new Date(mClubEndDate) : undefined,
             media_club_status: mediaClubInfoObj?.status ?? 'completed',
         };
     });

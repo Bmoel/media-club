@@ -92,7 +92,7 @@ function MediaPage() {
                             <MediaMemberInfoStack>
                                 <Typography variant="overline" color="text.secondary">Media Club end date</Typography>
                                 <Typography variant="body1" fontWeight="bold">
-                                    {media?.media_club_date_finished ? formatDate(media.media_club_date_finished) : '-'}
+                                    {media?.media_club_date_finished ? formatDate(media.media_club_date_finished) : 'Currently watching (`･ω･´)'}
                                 </Typography>
                             </MediaMemberInfoStack>
                         </Grid>
