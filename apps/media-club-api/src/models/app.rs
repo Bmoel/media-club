@@ -7,9 +7,20 @@ use serde::Serialize;
 use std::sync::Arc;
 
 #[derive(Clone)]
+pub struct EnvironmentVariables {
+    pub media_table_name: String,
+    pub users_table_name: String,
+    pub client_id: String,
+    pub client_secret: String,
+    pub redirect_uri: String,
+}
+
+#[derive(Clone)]
 pub struct AppState {
     pub media_repository: Arc<dyn MediaRepository + Send + Sync>,
     pub users_repository: Arc<dyn UsersRepository + Send + Sync>,
+    pub http_client: reqwest::Client,
+    pub environment_variables: EnvironmentVariables,
 }
 
 #[derive(Serialize)]

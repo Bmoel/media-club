@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Box, IconButton, ImageList, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Typography, Zoom } from "@mui/material";
 import { Info } from "@mui/icons-material";
-import useConfig from "../hooks/useConfig";
-import MediaInfoDrawer from "../components/MediaInfoDrawer";
-import type { MediaInfoDrawerType } from "../types/drawers.types";
-import useAnilistMediaQuery from "../hooks/useAnilistMediaQuery";
+import useConfig from "../../hooks/useConfig";
+import MediaInfoDrawer from "../../components/MediaInfoDrawer";
+import type { MediaInfoDrawerType } from "../../types/drawers.types";
+import useAnilistHomeMedia from "../../hooks/useAnilistHomeMedia";
+import { useNavigate } from "react-router";
 
 function HomePage() {
     const [mediaInfoDrawer, setMediaInfoDrawer] = useState<MediaInfoDrawerType>({
@@ -13,19 +14,22 @@ function HomePage() {
     });
 
     const { isMobile } = useConfig();
-    const mediaList = useAnilistMediaQuery();
+    const navigate = useNavigate();
+    const { mediaList, mediaListIsLoading } = useAnilistHomeMedia();
+
+    if (mediaListIsLoading) {
+        return (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 25 }}>
+                <CircularProgress size={80} sx={{ mb: 2 }} />
+                <Typography variant="h6" align="center">Loading... (-■_■)</Typography>
+            </Box>
+        );
+    }
 
     return (
         <>
-            <Box
-                sx={isMobile ? undefined : {
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Stack spacing={2}>
-                    <Typography variant="h1" fontSize="32px">Media Club</Typography>
+            <Container maxWidth="lg">
+                <Zoom in timeout={350}>
                     <ImageList
                         cols={isMobile ? 2 : 3}
                         gap={isMobile ? 8 : 16}
@@ -35,11 +39,18 @@ function HomePage() {
                                 <ImageListItem key={media.id} className="element-slight-hover">
                                     <img
                                         src={media.coverImage.extraLarge}
-                                        style={{ borderRadius: '10px' }}
+                                        style={{ borderRadius: '10px', cursor: 'pointer' }}
+                                        alt={`${media.title.english ?? 'anime'} cover image`}
+                                        onClick={() => {
+                                            if (isNaN(media.id)) {
+                                                return;
+                                            }
+                                            navigate(`/media/${media.id}`);
+                                        }}
                                     />
                                     <ImageListItemBar
-                                        title={media.title.english}
-                                        subtitle={media.title.native}
+                                        title={media.title.english ?? media.title.native ?? 'N/A'}
+                                        subtitle={(media.title.english === undefined) ? undefined : (media.title.native ?? '')}
                                         actionIcon={
                                             <IconButton
                                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
@@ -58,8 +69,8 @@ function HomePage() {
                             );
                         }) ?? []}
                     </ImageList>
-                </Stack>
-            </Box>
+                </Zoom>
+            </Container>
             <MediaInfoDrawer
                 mediaInfoDrawer={mediaInfoDrawer}
                 closeDrawer={() => setMediaInfoDrawer({

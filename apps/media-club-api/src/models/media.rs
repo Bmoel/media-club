@@ -1,3 +1,4 @@
+use crate::errors::MyError;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use strum_macros::{Display, EnumString};
@@ -20,5 +21,5 @@ pub struct MediaItem {
 
 #[async_trait]
 pub trait MediaRepository: Send + Sync {
-    async fn get_media_entries(&self) -> Result<Vec<MediaItem>, String>;
+    async fn get_media_entries(&self) -> Result<Vec<MediaItem>, MyError>;
 }

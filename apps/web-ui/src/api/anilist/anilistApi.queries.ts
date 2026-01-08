@@ -28,3 +28,53 @@ query MediaInfoQuery($idIn: [Int], $sort: [MediaSort]) {
   }
 }
 `;
+
+export const MediaListWithUsersQuery = `
+query MediaList($idIn: [Int], $mediaId: Int, $format: ScoreFormat) {
+  Page {
+    mediaList(userId_in: $idIn, mediaId: $mediaId) {
+      score(format: $format)
+      notes
+      user {
+        avatar {
+          medium
+        }
+        name
+        siteUrl
+        id
+      }
+    }
+  }
+}
+`;
+
+export const UserFavoritesQuery = `
+query User($id: Int) {
+  User(id: $id) {
+    favourites {
+      anime {
+        nodes {
+          id
+        }
+      }
+      characters {
+        nodes {
+          id
+          name {
+            full
+          }
+          image {
+            medium
+          }
+          siteUrl
+          media {
+            nodes {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;

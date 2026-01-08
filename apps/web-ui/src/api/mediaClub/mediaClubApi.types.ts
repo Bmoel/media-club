@@ -16,4 +16,15 @@ export type MediaClubMedia = {
     status: WatchStatus,
 }
 
-export type MediaClubMediaResponse = MediaClubApiResponse<Array<MediaClubMedia>>
+export type MediaClubMediaResponse = MediaClubApiResponse<Array<MediaClubMedia>>;
+
+export type MediaClubUser = {
+    user_id: number,
+    created_at: string,
+}
+
+export type MediaClubUsersResponse = MediaClubApiResponse<Array<MediaClubUser>>;
+
+export type AuthAnilistUserRequest = { code: string };
+
+export type AuthAnilistUserResponse = MediaClubApiResponse<null>;

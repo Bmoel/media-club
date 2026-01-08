@@ -1,6 +1,6 @@
 import { baseApi } from "../baseApi";
-import { MEDIA_CLUB_MEDIA_TAG } from "./mediaClubApi.tags";
-import type { MediaClubMediaResponse } from "./mediaClubApi.types";
+import { MEDIA_CLUB_MEDIA_TAG, MEDIA_CLUB_USERS_TAG } from "./mediaClubApi.tags";
+import type { MediaClubMediaResponse, AuthAnilistUserRequest, MediaClubUsersResponse, MediaClubUser } from "./mediaClubApi.types";
 
 const BASE_URL = import.meta.env.VITE_MEDIA_CLUB_API_BASE_URL;
 
@@ -19,8 +19,43 @@ const mediaClubApi = baseApi.injectEndpoints({
                 const errorData = response.data;
                 return errorData?.error?.message ?? "An unknown error occurred";
             }
-        })
+        }),
+        getUsers: build.query<MediaClubUser[], undefined>({
+            query: () => ({
+                url: `${BASE_URL}/users`,
+                method: 'GET'
+            }),
+            providesTags: () => [MEDIA_CLUB_USERS_TAG],
+            transformResponse: (response: MediaClubUsersResponse) => {
+                return response.data ?? [];
+            },
+            transformErrorResponse: (response: {status: number, data: MediaClubUsersResponse}) => {
+                const errorData = response.data;
+                return errorData?.error?.message ?? "An unknown error occurred";
+            }
+        }),
+        syncAnilistUser: build.mutation<boolean, AuthAnilistUserRequest>({
+            query: ({ code }) => ({
+                url: `${BASE_URL}/auth/sync`,
+                method: 'POST',
+                body: { code },
+            }),
+            invalidatesTags: () => [MEDIA_CLUB_USERS_TAG],
+        }),
+        removeAnilistUser: build.mutation<boolean, AuthAnilistUserRequest>({
+            query: ({ code }) => ({
+                url: `${BASE_URL}/auth/remove`,
+                method: 'POST',
+                body: { code },
+            }),
+            invalidatesTags: () => [MEDIA_CLUB_USERS_TAG],
+        }),
     }),
 });
 
-export const {useMediaClubMediaInfoQuery} = mediaClubApi;
+export const {
+    useMediaClubMediaInfoQuery,
+    useGetUsersQuery,
+    useSyncAnilistUserMutation,
+    useRemoveAnilistUserMutation
+} = mediaClubApi;
