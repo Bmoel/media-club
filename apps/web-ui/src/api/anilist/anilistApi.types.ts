@@ -5,10 +5,7 @@ export type AnilistResponse<T> = {
     errors: Array<IGraphQLResponseError>;
 }
 
-export type AnilistMediaInfoRequest = {
-    idIn: string[];
-    sort: string;
-}
+//////////////////////////////////////////////////////////////////
 
 export type AnilistDate = {
     month?: number,
@@ -41,16 +38,22 @@ export type AnilistMediaInfoResponseData = {
     }
 }
 
+export type AnilistMediaInfoRequest = {
+    idIn: string[];
+    sort: string;
+}
+
 export type AnilistMediaInfoResponse = AnilistResponse<AnilistMediaInfoResponseData>;
 
-export type AnilistUser = {
+//////////////////////////////////////////////////////////////////
+
+export type MediaAnilistUser = {
     score?: number;
     notes?: string;
     user: {
         avatar: {
             medium?: string;
         };
-        bannerImage?: string;
         name?: string;
         siteUrl?: string;
         id: number;
@@ -59,7 +62,7 @@ export type AnilistUser = {
 
 export type AnilistUsersInfoResponseData = {
     Page: {
-        mediaList: Record<string, AnilistUser>
+        mediaList: Record<string, MediaAnilistUser>
     }
 }
 
@@ -70,3 +73,38 @@ export type AnilistUserInfoRequest = {
 }
 
 export type AnilistUserInfoResponse = AnilistResponse<AnilistUsersInfoResponseData>;
+
+//////////////////////////////////////////////////////////////////
+
+export type AnilistUserFavorites = {
+    about?: string;
+    bannerImage?: string;
+    favourites: {
+        anime: {
+            nodes: Array<{ id: number }>
+        }
+        characters: {
+            nodes: Array<{
+                id: number;
+                name: {
+                    full?: string;
+                }
+                image: {
+                    medium?: string;
+                }
+                siteUrl?: string;
+                media: {
+                    nodes: Array<{ id: number }>
+                }
+            }>
+        }
+    }
+}
+
+export type AnilistUserFavoriesRequest = {
+    id: number,
+}
+
+export type AnilistUserFavoritesResponse = AnilistResponse<{User: AnilistUserFavorites}>;
+
+//////////////////////////////////////////////////////////////////

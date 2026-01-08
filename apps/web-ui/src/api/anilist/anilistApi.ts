@@ -1,7 +1,17 @@
 import { baseApi } from "../baseApi";
-import { ANILIST_MEDIA_INFO_TAG, ANILIST_USERS_INFO_TAG } from "./anilistApi.tags";
-import type { AnilistUserInfoRequest, AnilistUserInfoResponse, AnilistMediaInfo, AnilistMediaInfoRequest, AnilistMediaInfoResponse, AnilistUser } from "./anilistApi.types";
-import { MediaInfoQuery, MediaListWithUsersQuery } from "./anilistApi.queries";
+import { ANILIST_MEDIA_INFO_TAG, ANILIST_USER_FAVORITES_TAG, ANILIST_USERS_INFO_TAG } from "./anilistApi.tags";
+import type { 
+    AnilistUserInfoRequest,
+    AnilistUserInfoResponse,
+    AnilistMediaInfo,
+    AnilistMediaInfoRequest,
+    AnilistMediaInfoResponse,
+    MediaAnilistUser,
+    AnilistUserFavorites,
+    AnilistUserFavoriesRequest,
+    AnilistUserFavoritesResponse,
+} from "./anilistApi.types";
+import { MediaInfoQuery, MediaListWithUsersQuery, UserFavoritesQuery } from "./anilistApi.queries";
 
 const BASE_URL: string = 'https://graphql.anilist.co';
 
@@ -24,7 +34,7 @@ const anilistApi = baseApi.injectEndpoints({
             },
             providesTags: () => [ANILIST_MEDIA_INFO_TAG],
         }),
-        anilistUsersMediaInfo: build.query<AnilistUser[], AnilistUserInfoRequest>({
+        anilistUsersMediaInfo: build.query<MediaAnilistUser[], AnilistUserInfoRequest>({
             query: (vars) => ({
                 url: BASE_URL,
                 body: {
@@ -40,8 +50,29 @@ const anilistApi = baseApi.injectEndpoints({
                 return response.data.errors;
             },
             providesTags: [ANILIST_USERS_INFO_TAG],
+        }),
+        anilistUserFavorites: build.query<AnilistUserFavorites, AnilistUserFavoriesRequest>({
+            query: (vars) => ({
+                url: BASE_URL,
+                body: {
+                    query: UserFavoritesQuery,
+                    variables: vars,
+                },
+                method: 'POST',
+            }),
+            transformResponse: (response: AnilistUserFavoritesResponse) => {
+                return response.data.User;
+            },
+            transformErrorResponse: (response: {status: number, data: AnilistMediaInfoResponse}) => {
+                return response.data.errors;
+            },
+            providesTags: [ANILIST_USER_FAVORITES_TAG],
         })
     })
 });
 
-export const {useAnilistMediaInfoQuery, useAnilistUsersMediaInfoQuery} = anilistApi;
+export const {
+    useAnilistMediaInfoQuery,
+    useAnilistUsersMediaInfoQuery,
+    useAnilistUserFavoritesQuery,
+} = anilistApi;

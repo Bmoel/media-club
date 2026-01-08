@@ -1,5 +1,5 @@
 import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
-import type { AnilistUser } from "../../../api/anilist/anilistApi.types";
+import type { MediaAnilistUser } from "../../../api/anilist/anilistApi.types";
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import MemberSkeleton from "../../../components/skeleton/MemberSkeleton";
 import { Info } from "@mui/icons-material";
@@ -7,9 +7,9 @@ import useConfig from "../../../hooks/useConfig";
 import UserListStack from "./UserListStack";
 
 interface UserListInterface {
-    anilistUsers: AnilistUser[] | undefined;
-    selectedUser?: AnilistUser;
-    setSelectedUser?: Dispatch<SetStateAction<AnilistUser | undefined>>;
+    anilistUsers: MediaAnilistUser[] | undefined;
+    selectedUser?: MediaAnilistUser;
+    setSelectedUser?: Dispatch<SetStateAction<MediaAnilistUser | undefined>>;
     dataIsLoading: boolean;
 }
 
@@ -18,7 +18,7 @@ function UserList(props: UserListInterface) {
 
     const { isMobile } = useConfig();
 
-    const onUserSelection = useCallback((newUser: AnilistUser) => {
+    const onUserSelection = useCallback((newUser: MediaAnilistUser) => {
         if (setSelectedUser === undefined) {
             return;
         }
@@ -40,7 +40,7 @@ function UserList(props: UserListInterface) {
     return (
         <Box>
             <Stack direction="row" alignItems="center">
-                <Typography variant="overline" sx={{ color: 'text.secondary', ml: 1 }}>
+                <Typography variant="overline" sx={{ color: 'text.secondary' }}>
                     Members
                 </Typography>
                 <Tooltip
@@ -52,7 +52,7 @@ function UserList(props: UserListInterface) {
                     </IconButton>
                 </Tooltip>
             </Stack>
-            {anilistUsers === undefined ? (
+            {(anilistUsers === undefined || anilistUsers.length === 0) ? (
                 <Typography
                     variant="body1"
                     color="text.secondary"
