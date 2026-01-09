@@ -1,5 +1,5 @@
-use crate::models::app::{ApiResponse};
-use axum::{Json};
+use crate::models::app::ApiResponse;
+use axum::Json;
 
 pub async fn welcome_route() -> Json<ApiResponse<String>> {
     Json(ApiResponse {

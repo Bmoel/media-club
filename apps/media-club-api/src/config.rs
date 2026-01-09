@@ -24,7 +24,14 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
             .load()
             .await
     } else {
-        aws_config::load_from_env().await
+        let region_provider =
+            aws_config::meta::region::RegionProviderChain::default_provider().or_else("us-east-2");
+
+        aws_config::from_env()
+            .region(region_provider)
+            .behavior_version(aws_config::BehaviorVersion::latest())
+            .load()
+            .await
     };
 
     let client = Arc::new(Client::new(&config));
@@ -36,14 +43,14 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
     Ok(AppState {
         media_repository: Arc::new(MediaRepo::new(
             Arc::clone(&client),
-            environtment_vars.media_table_name,
+            environtment_vars.media_table_name.to_string(),
         )),
         users_repository: Arc::new(UsersRepo::new(
             Arc::clone(&client),
-            environtment_vars.users_table_name,
+            environtment_vars.users_table_name.to_string(),
         )),
         http_client: http_client,
-        environment_variables: get_environment_variables()?,
+        environment_variables: environtment_vars,
     })
 }
 
