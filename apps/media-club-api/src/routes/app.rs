@@ -8,12 +8,15 @@ use crate::routes::{
 use axum::{routing::get, routing::post, Router};
 
 pub fn create_router(state: AppState) -> Router {
-    Router::new()
+    let api_routes = Router::new()
         .route("/", get(welcome_route))
         .route("/media", get(media_route))
         .route("/users", get(users_route))
         .route("/auth/sync", post(auth_sync_route))
-        .route("/auth/remove", post(auth_remove_route))
+        .route("/auth/remove", post(auth_remove_route));
+
+    Router::new()
+        .nest("/default", api_routes)
         .fallback(default_route)
         .with_state(state)
 }
