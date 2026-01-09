@@ -7,7 +7,6 @@ use tracing_subscriber::prelude::*;
 
 pub fn init_environment() {
     dotenvy::dotenv().ok();
-    std::env::set_var("AWS_LAMBDA_HTTP_IGNORE_STAGE_IN_PATH", "true");
 }
 
 pub fn init_telemetry() {
