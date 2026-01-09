@@ -1,9 +1,7 @@
 use crate::models::app::AppState;
 use crate::routes::auth_routes::{auth_remove_route, auth_sync_route};
 use crate::routes::{
-    common_routes::welcome_route,
-    media_routes::media_route,
-    users_routes::users_route,
+    common_routes::welcome_route, media_routes::media_route, users_routes::users_route,
 };
 use axum::{routing::get, routing::post, Router};
 
