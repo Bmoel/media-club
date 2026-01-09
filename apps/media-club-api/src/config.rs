@@ -36,8 +36,13 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
     let client = Arc::new(Client::new(&config));
     let http_client = reqwest::Client::builder()
         .user_agent("MediaClub-API/1.0")
+        .tls_backend_rustls()
+        .timeout(std::time::Duration::from_secs(10))
         .build()
-        .map_err(|_e| MyError::Internal("Failed to establish http client".into()))?;
+        .map_err(|e| {
+            tracing::error!("Failed to build reqwest client: {:?}", e);
+            MyError::Internal("Failed to establish http client".into())
+        })?;
 
     Ok(AppState {
         media_repository: Arc::new(MediaRepo::new(
