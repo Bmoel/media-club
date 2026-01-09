@@ -27,9 +27,8 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
         let region_provider =
             aws_config::meta::region::RegionProviderChain::default_provider().or_else("us-east-2");
 
-        aws_config::from_env()
+        aws_config::defaults(aws_config::BehaviorVersion::latest())
             .region(region_provider)
-            .behavior_version(aws_config::BehaviorVersion::latest())
             .load()
             .await
     };
