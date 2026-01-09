@@ -10,13 +10,10 @@ pub fn init_environment() {
 }
 
 pub fn init_telemetry() {
-    // Only init if we are local, should not happen on PROD
-    if std::env::var("DYNAMO_LOCAL_ENDPOINT").is_ok() {
-        tracing_subscriber::registry()
-            .with(tracing_subscriber::fmt::layer().pretty())
-            .with(tracing_subscriber::EnvFilter::new("info"))
-            .init();
-    }
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::fmt::layer().pretty())
+        .with(tracing_subscriber::EnvFilter::new("info"))
+        .init();
 }
 
 pub async fn startup_app_state() -> Result<AppState, MyError> {
