@@ -8,14 +8,3 @@ pub async fn welcome_route() -> Json<ApiResponse<String>> {
         error: None,
     })
 }
-
-pub async fn default_route() -> Json<ApiResponse<()>> {
-    Json(ApiResponse {
-        success: false,
-        data: None,
-        error: Some(ApiErrorDetail {
-            code: StatusCode::BAD_REQUEST.to_string(),
-            message: "Invalid route".to_string(),
-        }),
-    })
-}
