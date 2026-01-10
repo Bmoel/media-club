@@ -3,16 +3,17 @@ use crate::errors::MyError;
 use crate::models::app::{AppState, EnvironmentVariables};
 use aws_sdk_dynamodb::Client;
 use std::sync::Arc;
-use tracing_subscriber::prelude::*;
+use tracing_subscriber::EnvFilter;
 
 pub fn init_environment() {
     dotenvy::dotenv().ok();
 }
 
 pub fn init_telemetry() {
-    tracing_subscriber::registry()
-        .with(tracing_subscriber::fmt::layer().pretty())
-        .with(tracing_subscriber::EnvFilter::new("info"))
+    tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::from_default_env())
+        .with_ansi(false)
+        .without_time()
         .init();
 }
 
