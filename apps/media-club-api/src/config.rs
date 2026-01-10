@@ -41,7 +41,6 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
         .timeout(std::time::Duration::from_secs(10))
         .build()
         .map_err(|e| {
-            tracing::error!("Failed to build reqwest client: {:?}", e);
             MyError::Internal("Failed to establish http client".into())
         })?;
 
