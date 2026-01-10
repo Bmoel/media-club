@@ -23,7 +23,7 @@ function MediaPageBreadcrumbs({ mediaInfo }: MediaPageBreadcrumbsProps) {
                     sx={{ width: 22, height: 22, mr: 0.5 }}
                 />
                 {mediaInfo && (
-                    <Tooltip title={getPreferredName(mediaInfo.title)} enterDelay={500} arrow>
+                    <Tooltip title={getPreferredName(mediaInfo.title)} enterDelay={500} enterTouchDelay={0} arrow>
                         <Typography
                             noWrap
                             sx={{
