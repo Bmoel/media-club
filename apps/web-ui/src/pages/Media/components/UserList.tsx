@@ -46,6 +46,7 @@ function UserList(props: UserListInterface) {
                 <Tooltip
                     title="Will show available members who have this media in their Anilist"
                     placement={isMobile ? 'bottom-end' : 'right-start'}
+                    enterTouchDelay={0}
                 >
                     <IconButton size="small">
                         <Info />
