@@ -45,7 +45,7 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                 {media !== undefined && (
                     <>
                         {isMobile && <Puller />}
-                        {(media.bannerImage || media.coverImage) && (
+                        {(media.bannerImage || media.coverImage.extraLarge) && (
                             <Box sx={{ position: 'relative', height: 100, overflow: 'hidden', borderRadius: 2 }}>
                                 <div
                                     style={{
