@@ -15,10 +15,11 @@ export type AnilistDate = {
 
 export type AnilistMediaInfo = {
     id: number;
-    idMal?: number;
     title: {
         english?: string,
         native?: string,
+        romaji?: string,
+        userPreferred?: string,
     };
     coverImage: {
         extraLarge?: string;

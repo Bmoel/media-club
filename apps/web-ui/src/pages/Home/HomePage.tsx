@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Box, CircularProgress, Container, IconButton, ImageList, ImageListItem, ImageListItemBar, Typography, Zoom } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import useConfig from "../../hooks/useConfig";
-import MediaInfoDrawer from "../../components/MediaInfoDrawer";
+import MediaInfoDrawer from "./components/MediaInfoDrawer";
 import type { MediaInfoDrawerType } from "../../types/drawers.types";
 import useAnilistHomeMedia from "../../hooks/useAnilistHomeMedia";
 import { useNavigate } from "react-router";
+import usePreferredMediaName from "../../hooks/usePreferredMediaName";
 
 function HomePage() {
     const [mediaInfoDrawer, setMediaInfoDrawer] = useState<MediaInfoDrawerType>({
@@ -14,6 +15,7 @@ function HomePage() {
     });
 
     const { isMobile } = useConfig();
+    const getPreferredName = usePreferredMediaName();
     const navigate = useNavigate();
     const { mediaList, mediaListIsLoading } = useAnilistHomeMedia();
 
@@ -40,7 +42,7 @@ function HomePage() {
                                     <img
                                         src={media.coverImage.extraLarge}
                                         style={{ borderRadius: '10px', cursor: 'pointer' }}
-                                        alt={`${media.title.english ?? 'anime'} cover image`}
+                                        alt={`${getPreferredName(media.title)} cover image`}
                                         onClick={() => {
                                             if (isNaN(media.id)) {
                                                 return;
@@ -49,12 +51,12 @@ function HomePage() {
                                         }}
                                     />
                                     <ImageListItemBar
-                                        title={media.title.english ?? media.title.native ?? 'N/A'}
-                                        subtitle={(media.title.english === undefined) ? undefined : (media.title.native ?? '')}
+                                        title={getPreferredName(media.title)}
+                                        subtitle={typeof media.title.native === 'string' ? media.title.native : undefined}
                                         actionIcon={
                                             <IconButton
                                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                                aria-label={`An image for the anime "${media.title.english}"`}
+                                                aria-label={`An image for the anime "${getPreferredName(media.title)}"`}
                                                 onClick={() => setMediaInfoDrawer({
                                                     isOpen: true,
                                                     id: media.id,

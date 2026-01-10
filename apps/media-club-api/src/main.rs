@@ -14,13 +14,7 @@ async fn main() -> Result<(), Error> {
     config::init_environment();
     config::init_telemetry();
 
-    let app_state = match config::startup_app_state().await {
-        Ok(state) => state,
-        Err(e) => {
-            tracing::error!(error = ?e, "FAILED to initialize app state during startup");
-            return Err(e.into());
-        }
-    };
+    let app_state = config::startup_app_state().await?;
 
     let app = routes::app::create_router(app_state);
 

@@ -40,10 +40,7 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
         .tls_backend_rustls()
         .timeout(std::time::Duration::from_secs(10))
         .build()
-        .map_err(|e| {
-            tracing::error!("Failed to build reqwest client: {:?}", e);
-            MyError::Internal("Failed to establish http client".into())
-        })?;
+        .map_err(|_e| MyError::Internal("Failed to establish http client".into()))?;
 
     Ok(AppState {
         media_repository: Arc::new(MediaRepo::new(
