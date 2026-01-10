@@ -1,11 +1,12 @@
 import { Box, Stack, SwipeableDrawer, type SwipeableDrawerProps, type SxProps, Typography } from "@mui/material";
-import useConfig from "../hooks/useConfig";
+import useConfig from "../../../hooks/useConfig";
 import { useMemo } from "react";
 import type { Theme } from "@emotion/react";
-import { Puller } from "./Puller";
-import type { MediaInfoDrawerType } from "../types/drawers.types";
-import useGetMedia from "../hooks/useGetMedia";
-import useDateFormat from "../hooks/useDateFormat";
+import { Puller } from "../../../components/Puller";
+import type { MediaInfoDrawerType } from "../../../types/drawers.types";
+import useGetMedia from "../../../hooks/useGetMedia";
+import useDateFormat from "../../../hooks/useDateFormat";
+import usePreferredMediaName from "../../../hooks/usePreferredMediaName";
 
 interface MediaInfoDrawerProps {
     mediaInfoDrawer: MediaInfoDrawerType;
@@ -15,6 +16,7 @@ interface MediaInfoDrawerProps {
 function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps) {
     const { isMobile } = useConfig();
     const formatDate = useDateFormat();
+    const getPreferredName = usePreferredMediaName();
 
     const { media } = useGetMedia(mediaInfoDrawer?.id);
 
@@ -43,13 +45,13 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                 {media !== undefined && (
                     <>
                         {isMobile && <Puller />}
-                        {media.bannerImage !== undefined && (
+                        {(media.bannerImage || media.coverImage) && (
                             <Box sx={{ position: 'relative', height: 100, overflow: 'hidden', borderRadius: 2 }}>
                                 <div
                                     style={{
                                         position: 'absolute',
                                         top: 0, left: 0, right: 0, bottom: 0,
-                                        backgroundImage: `url(${media.bannerImage})`,
+                                        backgroundImage: `url(${media.bannerImage ?? media.coverImage.extraLarge})`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
                                         filter: 'blur(2px) brightness(0.75)',
@@ -67,7 +69,7 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                                 }}
                                 >
                                     <Typography color="white" fontSize="32px" fontWeight="bold" align="center">
-                                        {media.title.english ?? media.title.native}
+                                        {getPreferredName(media.title)}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -98,7 +100,7 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                                 <Typography variant="body1" fontWeight="bold">{`${media.averageScore} / 100`}</Typography>
                             </>
                         )}
-                        {Array.isArray(media.studios.nodes) && (
+                        {Array.isArray(media.studios.nodes) && media.studios.nodes.length > 0 && (
                             <>
                                 <Typography variant="overline" color="text.secondary">Animation Studios</Typography>
                                 {media.studios.nodes.map((studioInfo, idx) => {

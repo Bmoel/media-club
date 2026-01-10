@@ -2,23 +2,24 @@ export const MediaInfoQuery = `
 query MediaInfoQuery($idIn: [Int], $sort: [MediaSort]) {
   Page {
     media(id_in: $idIn, sort: $sort) {
-      id,
-      idMal,
+      id
       title {
         english,
         native,
-      },
+        romaji,
+        userPreferred
+      }
       coverImage {
         extraLarge
-      },
-      bannerImage,
-      averageScore,
-      siteUrl,
+      }
+      bannerImage
+      averageScore
+      siteUrl
       studios {
         nodes {
           name
         }
-      },
+      }
       startDate {
         month
         year

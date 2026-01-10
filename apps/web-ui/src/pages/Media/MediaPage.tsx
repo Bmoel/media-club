@@ -62,7 +62,7 @@ function MediaPage() {
                         <AnilistChip
                             label="Anilist Page"
                             href={media?.siteUrl}
-                            ariaLabel={`Visit anilist page for ${media?.title.english ?? media?.title.native}`}
+                            ariaLabel="Visit Anilist site for the currently selected media"
                         />
                     </Box>
                     <Grid container spacing={2}>
