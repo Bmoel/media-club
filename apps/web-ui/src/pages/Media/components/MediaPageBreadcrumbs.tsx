@@ -34,7 +34,7 @@ function MediaPageBreadcrumbs({ mediaInfo }: MediaPageBreadcrumbsProps) {
                             }}
                             color="text.primary"
                         >
-                            {mediaInfo?.title.english}
+                            {getPreferredName(mediaInfo.title)}
                         </Typography>
                     </Tooltip>
                 )}
