@@ -61,13 +61,15 @@ make query URL=endpoint
 
 ## Building
 
-To build the project for production, run `cargo lambda build --release`. Remove the `--release` flag to build for development.
+Note, building will mostly not likely work on Windows unless you have the right dependencies. Would recommend building on linux (I personally use WSL for this)
+
+Not needed for development due to its relation to [Deploying](#deploying). Please reach out to @Bmoel if there are any concerns about new dependencies and building them for production
 
 Read more about building your lambda function in [the Cargo Lambda documentation](https://www.cargo-lambda.info/commands/build.html).
 
 ## Deploying
 
-To deploy the project, run `cargo lambda deploy`. This will create an IAM role and a Lambda function in your AWS account.
+Do not try and deploy to this project since you do not have permission. Please reach out to @Bmoel to approve any new Pull Requests and building/deploying will be handled then
 
 Read more about deploying your lambda function in [the Cargo Lambda documentation](https://www.cargo-lambda.info/commands/deploy.html).
 
