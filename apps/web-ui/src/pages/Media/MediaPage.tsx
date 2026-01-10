@@ -10,10 +10,8 @@ import useAnilistUsersMediaInfo from "../../hooks/useAnilistUsersMediaInfo";
 import UserList from "./components/UserList";
 import MediaMemberInfoStack from "./components/MediaMemberInfoStack";
 import AnilistChip from "../../components/AnilistChip";
-import useUserFavorites from "../../hooks/useUserFavorites";
-import { Favorite } from "@mui/icons-material";
-import CharacterList from "../../components/CharacterList";
 import useDateFormat from "../../hooks/useDateFormat";
+import SelectedUserInfo from "./components/SelectedUserInfo";
 
 function MediaPage() {
     const [selectedUser, setSelectedUser] = useState<MediaAnilistUser | undefined>(undefined);
@@ -25,11 +23,8 @@ function MediaPage() {
         Number(id),
         !(media?.media_club_status === 'completed')
     );
-    const { getFavoritesCharacters, isFavoriteAnime } = useUserFavorites(selectedUser?.user.id);
     const formatDate = useDateFormat();
     const navigate = useNavigate();
-
-    const averageScoreBoxesGridSize: number = useMemo(() => isMobile ? 12 : 6, [isMobile]);
 
     const mediaClubAverageScore: string = useMemo(() => {
         if (anilistUsers === undefined || anilistUsers.length === 0) {
@@ -66,21 +61,21 @@ function MediaPage() {
                         />
                     </Box>
                     <Grid container spacing={2}>
-                        <Grid size={averageScoreBoxesGridSize}>
+                        <Grid size={isMobile ? 12 : 6}>
                             <MediaScoreImageBox
                                 mediaSrc={media?.coverImage.extraLarge ?? ''}
                                 titleText="Anilist Average Score"
                                 scoreText={`${media?.averageScore?.toString() ?? '-'} / 100`}
                             />
                         </Grid>
-                        <Grid size={averageScoreBoxesGridSize}>
+                        <Grid size={isMobile ? 12 : 6}>
                             <MediaScoreImageBox
                                 mediaSrc={'/chuuniland.svg'}
                                 titleText="Media Club Average Score"
                                 scoreText={`${mediaClubAverageScore} / 100`}
                             />
                         </Grid>
-                        <Grid size={averageScoreBoxesGridSize}>
+                        <Grid size={isMobile ? 12 : 6}>
                             <MediaMemberInfoStack>
                                 <Typography variant="overline" color="text.secondary">Media Club start date</Typography>
                                 <Typography variant="body1" fontWeight="bold">
@@ -88,7 +83,7 @@ function MediaPage() {
                                 </Typography>
                             </MediaMemberInfoStack>
                         </Grid>
-                        <Grid size={averageScoreBoxesGridSize}>
+                        <Grid size={isMobile ? 12 : 6}>
                             <MediaMemberInfoStack>
                                 <Typography variant="overline" color="text.secondary">Media Club end date</Typography>
                                 <Typography variant="body1" fontWeight="bold">
@@ -104,49 +99,8 @@ function MediaPage() {
                                 dataIsLoading={isFetching}
                             />
                         </Grid>
-                        {(selectedUser !== undefined) && (
-                            <>
-                                <Grid size={12}>
-                                    <Box display="flex" justifyContent="space-between">
-                                        <AnilistChip
-                                            label="User Profile"
-                                            href={selectedUser.user.siteUrl}
-                                            ariaLabel="Visit anilist profile for the selected user"
-                                        />
-                                        {isFavoriteAnime(media?.id) && (
-                                            <Stack direction="row" spacing={1} alignItems="center">
-                                                <Favorite color="error" />
-                                                <Typography variant="overline">Favorite</Typography>
-                                            </Stack>
-                                        )}
-                                    </Box>
-                                </Grid>
-                                <Grid size={averageScoreBoxesGridSize}>
-                                    <MediaMemberInfoStack>
-                                        <Typography variant="overline" color="text.secondary">USER SCORE</Typography>
-                                        <Typography variant="h2" color="primary">{selectedUser.score ?? '-'}</Typography>
-                                    </MediaMemberInfoStack>
-                                </Grid>
-                                <Grid size={averageScoreBoxesGridSize}>
-                                    <MediaMemberInfoStack>
-                                        <Typography variant="overline" color="text.secondary">REVIEW & NOTES</Typography>
-                                        <Typography
-                                            variant="body1"
-                                            fontStyle="italic"
-                                            alignItems="center"
-                                            textAlign="center"
-                                        >
-                                            {selectedUser.notes ?? "No notes have been provided for this title"}
-                                        </Typography>
-                                    </MediaMemberInfoStack>
-                                </Grid>
-                                <Grid size={12}>
-                                    <MediaMemberInfoStack>
-                                        <Typography variant="overline" color="text.secondary">FAVORITE CHARACTERS</Typography>
-                                        <CharacterList characters={getFavoritesCharacters(media?.id)} />
-                                    </MediaMemberInfoStack>
-                                </Grid>
-                            </>
+                        {(selectedUser !== undefined && media !== undefined) && (
+                            <SelectedUserInfo media={media} selectedUser={selectedUser} />
                         )}
                     </Grid>
                 </Stack>
