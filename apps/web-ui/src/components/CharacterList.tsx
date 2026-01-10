@@ -1,11 +1,14 @@
 import { Avatar, Link, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import type { Character } from "../types/characters.types";
+import useSafeAnilistUrl from "../hooks/useSafeAnilistUrl";
 
 interface CharacterListProps {
     characters: Character[],
 }
 
 function CharacterList({ characters }: CharacterListProps) {
+    const getSafeAnilistUrl = useSafeAnilistUrl();
+
     if (characters.length === 0) {
         return <Typography
             variant="body1"
@@ -27,7 +30,7 @@ function CharacterList({ characters }: CharacterListProps) {
                         </ListItemAvatar>
                         <ListItemText>
                             <Link
-                                href={character.siteUrl}
+                                href={getSafeAnilistUrl(character.siteUrl)}
                                 underline="always"
                                 color="inherit"
                                 target="_blank"
