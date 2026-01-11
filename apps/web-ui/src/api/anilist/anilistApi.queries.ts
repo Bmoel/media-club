@@ -25,6 +25,7 @@ query MediaInfoQuery($idIn: [Int], $sort: [MediaSort]) {
         year
         day
       }
+      type
     }
   }
 }

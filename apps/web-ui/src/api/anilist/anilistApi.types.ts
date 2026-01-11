@@ -13,6 +13,8 @@ export type AnilistDate = {
     day?: number,
 }
 
+export type AnilistMediaType = "ANIME" | "MANGA";
+
 export type AnilistMediaInfo = {
     id: number;
     title: {
@@ -31,6 +33,7 @@ export type AnilistMediaInfo = {
         nodes?: {name: string}[];
     };
     startDate: AnilistDate;
+    type: AnilistMediaType;
 };
 
 export type AnilistMediaInfoResponseData = {

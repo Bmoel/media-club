@@ -76,7 +76,7 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
                         )}
                         {(typeof media.startDate.month === 'number') && (typeof media.startDate.day === 'number') && (typeof media.startDate.year === 'number') && (
                             <>
-                                <Typography variant="overline" color="text.secondary">Anime start date</Typography>
+                                <Typography variant="overline" color="text.secondary">{`${media.type === "ANIME" ? 'Anime' : 'Manga/Novel'} start date`}</Typography>
                                 <Typography variant="body1" fontWeight="bold">
                                     {formatDate(new Date(media.startDate.year, media.startDate.month, media.startDate.day))}
                                 </Typography>
