@@ -40,6 +40,8 @@ function MediaInfoDrawer({ mediaInfoDrawer, closeDrawer }: MediaInfoDrawerProps)
             onOpen={() => { }}
             anchor={isMobile ? "bottom" : "right"}
             slotProps={drawerSlotProps}
+            disableDiscovery
+            disableSwipeToOpen
         >
             <Stack spacing={2} sx={stackCss}>
                 {media !== undefined && (

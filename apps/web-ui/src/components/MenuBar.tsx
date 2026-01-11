@@ -50,6 +50,8 @@ export default function MenuBar() {
                 onClose={() => setSideMenuOpen(false)}
                 onOpen={() => { }}
                 anchor="left"
+                disableDiscovery
+                disableSwipeToOpen
             >
                 <List sx={listCss}>
                     <ListItem key={'title'}>
@@ -82,7 +84,7 @@ export default function MenuBar() {
                             <ListItemIcon>
                                 <AppRegistration color='warning' />
                             </ListItemIcon>
-                            <ListItemText primary={'Register'} />
+                            <ListItemText primary="Registration" />
                         </ListItemButton>
                     </ListItem>
                 </List>
