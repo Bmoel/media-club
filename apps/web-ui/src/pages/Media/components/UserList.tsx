@@ -1,6 +1,6 @@
 import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import type { MediaAnilistUser } from "../../../api/anilist/anilistApi.types";
-import { useCallback, type Dispatch, type SetStateAction } from "react";
+import { useCallback, useMemo, type Dispatch, type SetStateAction } from "react";
 import MemberSkeleton from "../../../components/skeleton/MemberSkeleton";
 import { Info } from "@mui/icons-material";
 import useConfig from "../../../hooks/useConfig";
@@ -29,6 +29,15 @@ function UserList(props: UserListInterface) {
         setSelectedUser(newUser);
     }, [selectedUser?.user.id, setSelectedUser]);
 
+    const sortedUsers = useMemo(() => {
+        if (anilistUsers === undefined) {
+            return undefined;
+        }
+        return Array.from(anilistUsers)?.sort((a, b) => {
+            return a.user?.name?.localeCompare(b.user?.name ?? '') ?? 1;
+        });
+    }, [anilistUsers]);
+
     if (dataIsLoading) {
         return (
             <UserListStack>
@@ -53,7 +62,7 @@ function UserList(props: UserListInterface) {
                     </IconButton>
                 </Tooltip>
             </Stack>
-            {(anilistUsers === undefined || anilistUsers.length === 0) ? (
+            {(sortedUsers === undefined || sortedUsers.length === 0) ? (
                 <Typography
                     variant="body1"
                     color="text.secondary"
@@ -65,7 +74,7 @@ function UserList(props: UserListInterface) {
                 </Typography>
             ) : (
                 <UserListStack>
-                    {anilistUsers.map((user) => (
+                    {sortedUsers.map((user) => (
                         <Box
                             key={user?.user.name}
                             onClick={() => onUserSelection(user)}
