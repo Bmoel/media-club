@@ -1,0 +1,91 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FavoritesPayload {
+    pub user_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CharacterResponse {
+    pub id: i32,
+    pub name: CharacterName,
+    pub image: CharacterImage,
+    #[serde(rename = "siteUrl")]
+    pub site_url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FavoritesResponse {
+    pub anime: Vec<i32>,
+    pub manga: Vec<i32>,
+    pub characters: Vec<CharacterResponse>,
+}
+
+#[derive(Deserialize)]
+pub struct AniListResponse<T> {
+    pub data: DataWrapper<T>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct DataWrapper<T> {
+    pub user: UserWrapper<T>,
+}
+
+#[derive(Deserialize)]
+pub struct UserWrapper<T> {
+    pub favourites: T,
+}
+
+#[derive(Deserialize)]
+pub struct AnimeFavs {
+    pub anime: Connection<MediaNode>,
+}
+
+#[derive(Deserialize)]
+pub struct MangaFavs {
+    pub manga: Connection<MediaNode>,
+}
+
+#[derive(Deserialize)]
+pub struct CharacterFavs {
+    pub characters: Connection<Character>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Connection<T> {
+    pub nodes: Vec<T>,
+    pub page_info: PageInfo,
+}
+
+#[derive(Deserialize)]
+pub struct PageInfo {
+    #[serde(rename = "hasNextPage")]
+    pub has_next_page: bool,
+}
+
+#[derive(Deserialize)]
+pub struct MediaNode {
+    pub id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CharacterName {
+    pub full: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CharacterImage {
+    pub medium: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Character {
+    pub id: i32,
+    pub name: CharacterName,
+    pub image: CharacterImage,
+    pub site_url: String,
+    pub media: Connection<MediaNode>,
+}

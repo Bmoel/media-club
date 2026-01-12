@@ -3,6 +3,7 @@ use crate::errors::MyError;
 use crate::models::app::{AppState, EnvironmentVariables};
 use aws_sdk_dynamodb::Client;
 use std::sync::Arc;
+use tokio::sync::Semaphore;
 use tracing_subscriber::EnvFilter;
 
 pub fn init_environment() {
@@ -41,6 +42,7 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
         .timeout(std::time::Duration::from_secs(10))
         .build()
         .map_err(|_e| MyError::Internal("Failed to establish http client".into()))?;
+    let http_client_limiter = Arc::new(Semaphore::new(10));
 
     Ok(AppState {
         media_repository: Arc::new(MediaRepo::new(
@@ -52,6 +54,7 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
             environtment_vars.users_table_name.to_string(),
         )),
         http_client: http_client,
+        http_client_limiter: http_client_limiter,
         environment_variables: environtment_vars,
     })
 }

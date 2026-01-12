@@ -5,6 +5,13 @@ use axum::{
 };
 use serde::Serialize;
 use std::sync::Arc;
+use tokio::sync::Semaphore;
+
+#[derive(Serialize)]
+pub struct GraphQLRequest {
+    pub query: &'static str,
+    pub variables: serde_json::Value,
+}
 
 #[derive(Clone)]
 pub struct EnvironmentVariables {
@@ -20,6 +27,7 @@ pub struct AppState {
     pub media_repository: Arc<dyn MediaRepository + Send + Sync>,
     pub users_repository: Arc<dyn UsersRepository + Send + Sync>,
     pub http_client: reqwest::Client,
+    pub http_client_limiter: Arc<Semaphore>,
     pub environment_variables: EnvironmentVariables,
 }
 

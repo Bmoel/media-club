@@ -1,11 +1,7 @@
+use crate::models::app::GraphQLRequest;
+use crate::models::constants::anilist_constants::{ANILIST_AUTH_URL, ANILIST_GRAPHQL_URL};
 use crate::{errors::MyError, models::app::AppState};
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize)]
-struct GraphQLRequest {
-    query: &'static str,
-    variables: serde_json::Value,
-}
+use serde::Deserialize;
 
 pub async fn exchange_code_for_token(state: &AppState, auth_code: &str) -> Result<String, MyError> {
     let payload = serde_json::json!({
@@ -16,9 +12,10 @@ pub async fn exchange_code_for_token(state: &AppState, auth_code: &str) -> Resul
         "code": auth_code,
     });
 
+    let _permit = state.http_client_limiter.acquire().await.unwrap();
     let res = state
         .http_client
-        .post("https://anilist.co/api/v2/oauth/token")
+        .post(ANILIST_AUTH_URL)
         .json(&payload)
         .send()
         .await
@@ -37,7 +34,7 @@ pub async fn exchange_code_for_token(state: &AppState, auth_code: &str) -> Resul
     Ok(data.access_token)
 }
 
-pub async fn get_anilist_user_id(http: &reqwest::Client, token: &str) -> Result<i32, MyError> {
+pub async fn get_anilist_user_id(state: &AppState, token: &str) -> Result<i32, MyError> {
     let query = "
         query {
             Viewer {
@@ -51,8 +48,10 @@ pub async fn get_anilist_user_id(http: &reqwest::Client, token: &str) -> Result<
         variables: serde_json::json!({}),
     };
 
-    let response = http
-        .post("https://graphql.anilist.co")
+    let _permit = state.http_client_limiter.acquire().await.unwrap();
+    let response = state
+        .http_client
+        .post(ANILIST_GRAPHQL_URL)
         .bearer_auth(token)
         .json(&payload)
         .send()

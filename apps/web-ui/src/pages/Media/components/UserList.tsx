@@ -41,7 +41,7 @@ function UserList(props: UserListInterface) {
     if (dataIsLoading) {
         return (
             <UserListStack>
-                {[...Array(15)].map((_, i) => <MemberSkeleton key={i} />)}
+                {[...Array(5)].map((_, i) => <MemberSkeleton key={i} />)}
             </UserListStack>
         );
     }
@@ -94,15 +94,29 @@ function UserList(props: UserListInterface) {
                                     mx: "auto",
                                 }}
                             />
-                            <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
-                                {user?.user.name}
-                            </Typography>
+                            <Tooltip title={user?.user.name} enterDelay={500} enterTouchDelay={0} arrow>
+                                <Typography
+                                    noWrap
+                                    variant="caption"
+                                    display="block"
+                                    sx={{
+                                        maxWidth: '66px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        mt: 0.5,
+                                    }}
+                                >
+                                    {user?.user.name}
+                                </Typography>
+                            </Tooltip>
                         </Box>
                     ))}
                 </UserListStack>
-            )}
+            )
+            }
 
-        </Box>
+        </Box >
     );
 }
 
