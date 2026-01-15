@@ -29,7 +29,7 @@ pub async fn users_favorites_route(
     let user_id_set: HashSet<i64> = users.iter().map(|item| item.user_id).collect();
     if !user_id_set.contains(&i64::from(payload.user_id)) {
         // User does not exist in database -_-
-        return Err(MyError::Internal("User does not exist".to_string()))
+        return Err(MyError::Internal("User does not exist".to_string()));
     }
     let favorites = anilist_favorites_service::get_user_favorites(&state, payload.user_id).await?;
 
