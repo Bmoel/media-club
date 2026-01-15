@@ -32,16 +32,14 @@ export type AuthAnilistUserResponse = MediaClubApiResponse<null>;
 export type UserFavoritesRequest = {user_id: number};
 
 export type AnilistCharacter = {
-    nodes: Array<{
-        id: number;
-        name: {
-            full?: string;
-        }
-        image: {
-            medium?: string;
-        }
-        siteUrl?: string;
-    }>
+    id: number;
+    name: {
+        full?: string;
+    }
+    image: {
+        medium?: string;
+    }
+    siteUrl?: string;
 }
 
 export type UserFavoritesResponse = {
