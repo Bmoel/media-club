@@ -28,3 +28,24 @@ export type MediaClubUsersResponse = MediaClubApiResponse<Array<MediaClubUser>>;
 export type AuthAnilistUserRequest = { code: string };
 
 export type AuthAnilistUserResponse = MediaClubApiResponse<null>;
+
+export type UserFavoritesRequest = {user_id: number};
+
+export type AnilistCharacter = {
+    nodes: Array<{
+        id: number;
+        name: {
+            full?: string;
+        }
+        image: {
+            medium?: string;
+        }
+        siteUrl?: string;
+    }>
+}
+
+export type UserFavoritesResponse = {
+    anime: Array<number>,
+    manga: Array<number>,
+    characters: Array<AnilistCharacter>,
+}

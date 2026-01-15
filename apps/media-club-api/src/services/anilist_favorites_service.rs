@@ -42,21 +42,7 @@ async fn get_favorite_anime(
     user_id: i32,
     media_id_map: &HashSet<i64>,
 ) -> Result<Vec<i32>, MyError> {
-    let query = "
-        query User($id: Int, $page: Int) {
-            User(id: $id) {
-                favourites {
-                    anime(page: $page) {
-                        nodes {
-                            id
-                        }
-                        pageInfo {
-                            hasNextPage
-                        }
-                    }
-            }
-        }
-    ";
+    let query = "query($id:Int,$page:Int){User(id:$id){favourites{anime(page:$page){nodes{id}pageInfo{hasNextPage}}}}}";
 
     let mut anime_list: Vec<i32> = Vec::new();
     for page in 1..MAX_ITERATIONS {
@@ -75,12 +61,28 @@ async fn get_favorite_anime(
             .map_err(|e| MyError::Network(e))?
             .json()
             .await
-            .map_err(|_| MyError::Internal("Failed to parse AniList response".into()))?;
+            .map_err(|e| MyError::Internal(format!("Parse error for anime favorites: {}", e)))?;
 
-        for anime in response.data.user.favourites.anime.nodes {
+        if let Some(errors) = response.errors {
+            return Err(MyError::Internal(format!(
+                "AniList API error for anime favs: {}",
+                errors[0].message
+            )));
+        }
+
+        let data = response
+            .data
+            .ok_or_else(|| MyError::Internal("AniList returned no data".into()))?;
+
+        let anime_conn = data.user.favourites.anime;
+
+        for anime in anime_conn.nodes {
             anime_list.push(anime.id);
         }
-        if !response.data.user.favourites.anime.page_info.has_next_page {
+        let page_info = anime_conn
+            .page_info
+            .ok_or_else(|| MyError::Internal("No page info found".to_string()))?;
+        if !page_info.has_next_page {
             break;
         }
     }
@@ -96,22 +98,7 @@ async fn get_favorite_manga(
     user_id: i32,
     media_id_map: &HashSet<i64>,
 ) -> Result<Vec<i32>, MyError> {
-    let query = "
-        query User($id: Int, $page: Int) {
-            User(id: $id) {
-                favourites {
-                    manga(page: $page) {
-                        nodes {
-                            id
-                        }
-                        pageInfo {
-                            hasNextPage
-                        }
-                    }
-                }
-            }
-        }
-    ";
+    let query = "query($id:Int,$page:Int){User(id:$id){favourites{manga(page:$page){nodes{id}pageInfo{hasNextPage}}}}}";
 
     let mut manga_list: Vec<i32> = Vec::new();
     for page in 1..MAX_ITERATIONS {
@@ -130,12 +117,28 @@ async fn get_favorite_manga(
             .map_err(|e| MyError::Network(e))?
             .json()
             .await
-            .map_err(|_| MyError::Internal("Failed to parse AniList response".into()))?;
+            .map_err(|e| MyError::Internal(format!("Parse error for manga favorites: {}", e)))?;
 
-        for manga in response.data.user.favourites.manga.nodes {
+        if let Some(errors) = response.errors {
+            return Err(MyError::Internal(format!(
+                "AniList API error for manga favs: {}",
+                errors[0].message
+            )));
+        }
+
+        let data = response
+            .data
+            .ok_or_else(|| MyError::Internal("AniList returned no data".into()))?;
+
+        let manga_conn = data.user.favourites.manga;
+
+        for manga in manga_conn.nodes {
             manga_list.push(manga.id);
         }
-        if !response.data.user.favourites.manga.page_info.has_next_page {
+        let page_info = manga_conn
+            .page_info
+            .ok_or_else(|| MyError::Internal("No page info found".to_string()))?;
+        if !page_info.has_next_page {
             break;
         }
     }
@@ -151,33 +154,7 @@ async fn get_favorite_characters(
     user_id: i32,
     media_id_map: &HashSet<i64>,
 ) -> Result<Vec<CharacterResponse>, MyError> {
-    let query: &str = "
-        query User($id: Int, $page: Int) {
-            User(id: $id) {
-                favourites {
-                    characters(page: $page) {
-                        nodes {
-                        id
-                        name {
-                            full
-                        }
-                        image {
-                            medium
-                        }
-                        siteUrl
-                        media {
-                            nodes {
-                                id
-                            }
-                        }
-                    }
-                    pageInfo {
-                        hasNextPage
-                    }
-                }
-            }
-        }
-    ";
+    let query = "query($id:Int,$page:Int){User(id:$id){favourites{characters(page:$page){nodes{id,name{full},image{medium},siteUrl,media{nodes{id}}}pageInfo{hasNextPage}}}}}";
 
     let mut character_list: Vec<CharacterResponse> = Vec::new();
     for page in 1..MAX_ITERATIONS {
@@ -196,9 +173,24 @@ async fn get_favorite_characters(
             .map_err(|e| MyError::Network(e))?
             .json()
             .await
-            .map_err(|_| MyError::Internal("Failed to parse AniList response".into()))?;
+            .map_err(|e| {
+                MyError::Internal(format!("Parse error for character favorites: {}", e))
+            })?;
 
-        for character in response.data.user.favourites.characters.nodes {
+        if let Some(errors) = response.errors {
+            return Err(MyError::Internal(format!(
+                "AniList API error for character favs: {}",
+                errors[0].message
+            )));
+        }
+
+        let data = response
+            .data
+            .ok_or_else(|| MyError::Internal("AniList returned no data".into()))?;
+
+        let character_conn = data.user.favourites.characters;
+
+        for character in character_conn.nodes {
             for media in character.media.nodes {
                 if media_id_map.contains(&i64::from(media.id.clone())) {
                     character_list.push(CharacterResponse {
@@ -211,14 +203,10 @@ async fn get_favorite_characters(
                 }
             }
         }
-        if !response
-            .data
-            .user
-            .favourites
-            .characters
+        let page_info = character_conn
             .page_info
-            .has_next_page
-        {
+            .ok_or_else(|| MyError::Internal("No page info".to_string()))?;
+        if !page_info.has_next_page {
             break;
         }
     }

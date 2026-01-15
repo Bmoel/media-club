@@ -23,12 +23,18 @@ pub struct FavoritesResponse {
 
 #[derive(Deserialize)]
 pub struct AniListResponse<T> {
-    pub data: DataWrapper<T>,
+    pub data: Option<DataWrapper<T>>,
+    pub errors: Option<Vec<AniListError>>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct AniListError {
+    pub message: String,
 }
 
 #[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
 pub struct DataWrapper<T> {
+    #[serde(rename = "User")]
     pub user: UserWrapper<T>,
 }
 
@@ -53,10 +59,11 @@ pub struct CharacterFavs {
 }
 
 #[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
+
 pub struct Connection<T> {
     pub nodes: Vec<T>,
-    pub page_info: PageInfo,
+    #[serde(rename = "pageInfo")]
+    pub page_info: Option<PageInfo>,
 }
 
 #[derive(Deserialize)]
@@ -72,20 +79,20 @@ pub struct MediaNode {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CharacterName {
-    pub full: String,
+    pub full: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CharacterImage {
-    pub medium: String,
+    pub medium: Option<String>,
 }
 
 #[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct Character {
     pub id: i32,
     pub name: CharacterName,
     pub image: CharacterImage,
+    #[serde(rename = "siteUrl")]
     pub site_url: String,
     pub media: Connection<MediaNode>,
 }
