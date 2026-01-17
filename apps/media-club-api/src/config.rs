@@ -1,9 +1,11 @@
 use crate::db::{media_repo::MediaRepo, users_repo::UsersRepo};
 use crate::errors::MyError;
 use crate::models::app::{AppState, EnvironmentVariables};
+use crate::services::throttled_client::ThrottledClient;
 use aws_sdk_dynamodb::Client;
+use governor::{Quota, RateLimiter};
+use std::num::NonZeroU32;
 use std::sync::Arc;
-use tokio::sync::Semaphore;
 use tracing_subscriber::EnvFilter;
 
 pub fn init_environment() {
@@ -42,7 +44,10 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
         .timeout(std::time::Duration::from_secs(10))
         .build()
         .map_err(|_e| MyError::Internal("Failed to establish http client".into()))?;
-    let http_client_limiter = Arc::new(Semaphore::new(10));
+    let quota = Quota::per_minute(NonZeroU32::new(90).unwrap());
+    let limiter = RateLimiter::direct(quota);
+
+    let throttled_client = ThrottledClient::new(http_client, Arc::new(limiter));
 
     Ok(AppState {
         media_repository: Arc::new(MediaRepo::new(
@@ -53,8 +58,7 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
             Arc::clone(&client),
             environtment_vars.users_table_name.to_string(),
         )),
-        http_client: http_client,
-        http_client_limiter: http_client_limiter,
+        anilist_client: Arc::new(throttled_client),
         environment_variables: environtment_vars,
     })
 }

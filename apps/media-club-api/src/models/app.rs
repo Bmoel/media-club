@@ -1,17 +1,13 @@
-use crate::models::{media::MediaRepository, users::UsersRepository};
+use crate::{
+    models::{media::MediaRepository, users::UsersRepository},
+    services::throttled_client::ThrottledClient,
+};
 use axum::{
     http::{header, StatusCode},
     response::{IntoResponse, Response},
 };
 use serde::Serialize;
 use std::sync::Arc;
-use tokio::sync::Semaphore;
-
-#[derive(Serialize)]
-pub struct GraphQLRequest {
-    pub query: &'static str,
-    pub variables: serde_json::Value,
-}
 
 #[derive(Clone)]
 pub struct EnvironmentVariables {
@@ -26,8 +22,7 @@ pub struct EnvironmentVariables {
 pub struct AppState {
     pub media_repository: Arc<dyn MediaRepository + Send + Sync>,
     pub users_repository: Arc<dyn UsersRepository + Send + Sync>,
-    pub http_client: reqwest::Client,
-    pub http_client_limiter: Arc<Semaphore>,
+    pub anilist_client: Arc<ThrottledClient>,
     pub environment_variables: EnvironmentVariables,
 }
 
