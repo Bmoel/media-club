@@ -7,6 +7,8 @@ export type MediaClubApiResponse<T> = {
     }
 }
 
+//////////////////////////////////////////////////////////////////
+
 export type WatchStatus = "completed" | "watching";
 
 export type MediaClubMedia = {
@@ -25,11 +27,13 @@ export type MediaClubUser = {
 
 export type MediaClubUsersResponse = MediaClubApiResponse<Array<MediaClubUser>>;
 
+//////////////////////////////////////////////////////////////////
+
 export type AuthAnilistUserRequest = { code: string };
 
 export type AuthAnilistUserResponse = MediaClubApiResponse<null>;
 
-export type UserFavoritesRequest = {user_id: number};
+//////////////////////////////////////////////////////////////////
 
 export type AnilistCharacter = {
     id: number;
@@ -40,10 +44,17 @@ export type AnilistCharacter = {
         medium?: string;
     }
     siteUrl?: string;
+    media: Array<number>,
 }
 
-export type UserFavoritesResponse = {
+export type UserFavorites = {
     anime: Array<number>,
     manga: Array<number>,
     characters: Array<AnilistCharacter>,
 }
+
+export type UserFavoritesRequest = {user_id: number};
+
+export type UserFavoritesResponse = MediaClubApiResponse<UserFavorites>;
+
+//////////////////////////////////////////////////////////////////

@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { useAnilistUserFavoritesQuery } from "../api/anilist/anilistApi";
-import type { Character } from "../types/characters.types";
+import { useGetUserFavoritesQuery } from "../api/mediaClub/mediaClubApi";
+import type { AnilistCharacter } from "../api/mediaClub/mediaClubApi.types";
 
 function useUserFavorites(userId?: number) {
-    const { data: userFavorites, isLoading: userFavoritesAreLoading } = useAnilistUserFavoritesQuery(
-        { id: userId as number },
+    const {data: userFavorites, isLoading: userFavoritesAreLoading} = useGetUserFavoritesQuery(
+        { user_id: userId as number },
         { skip: typeof userId !== 'number' }
     );
 
@@ -12,28 +12,16 @@ function useUserFavorites(userId?: number) {
         if (userFavorites === undefined || animeId === undefined || userFavoritesAreLoading) {
             return false;
         }
-        return userFavorites.favourites.anime.nodes.some(node => node.id === animeId);
+        return userFavorites.anime.some(id => id === animeId);
     }, [userFavorites, userFavoritesAreLoading]);
 
-    const getFavoritesCharacters = useCallback((animeId: number | undefined): Character[] => {
+    const getFavoritesCharacters = useCallback((animeId: number | undefined): AnilistCharacter[] => {
         if (userFavorites === undefined || animeId === undefined || userFavoritesAreLoading) {
             return [];
         }
-        const characters: Character[] = [];
-        userFavorites.favourites.characters.nodes.filter(node => {
-            const mediaCharacterAreIn = node.media.nodes;
-            mediaCharacterAreIn.forEach(mediaObj => {
-                if (mediaObj.id === animeId) {
-                    characters.push({
-                        id: node.id,
-                        name: node.name.full ?? '',
-                        image: node.image.medium ?? '',
-                        siteUrl: node.siteUrl ?? '',
-                    });
-                }
-            });
+        return userFavorites.characters.filter(character => {
+            return character.media.some(id => id === animeId);
         });
-        return characters;
     }, [userFavorites, userFavoritesAreLoading]);
 
     return {

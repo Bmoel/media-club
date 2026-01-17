@@ -1,9 +1,9 @@
 import { Avatar, Link, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import type { Character } from "../types/characters.types";
+import type { AnilistCharacter } from "../api/mediaClub/mediaClubApi.types";
 import useSafeAnilistUrl from "../hooks/useSafeAnilistUrl";
 
 interface CharacterListProps {
-    characters: Character[],
+    characters: AnilistCharacter[],
 }
 
 function CharacterList({ characters }: CharacterListProps) {
@@ -26,7 +26,7 @@ function CharacterList({ characters }: CharacterListProps) {
                 return (
                     <ListItem key={character.id}>
                         <ListItemAvatar>
-                            <Avatar sx={{ width: 50, height: 50 }} variant="rounded" src={character.image ?? ''} alt={`${character.name ?? ''} image`} />
+                            <Avatar sx={{ width: 50, height: 50 }} variant="rounded" src={character.image.medium ?? ''} alt={`${character.name ?? ''} image`} />
                         </ListItemAvatar>
                         <ListItemText>
                             <Link
@@ -37,7 +37,7 @@ function CharacterList({ characters }: CharacterListProps) {
                                 rel="noopener"
                                 variant="overline"
                             >
-                                {character.name}
+                                {character.name.full ?? 'Character has no name （；¬＿¬)'}
                             </Link>
                         </ListItemText>
                     </ListItem>

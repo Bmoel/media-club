@@ -12,6 +12,7 @@ pub struct CharacterResponse {
     pub image: CharacterImage,
     #[serde(rename = "siteUrl")]
     pub site_url: String,
+    pub media: Vec<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

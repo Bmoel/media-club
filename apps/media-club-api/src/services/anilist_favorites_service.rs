@@ -163,13 +163,20 @@ async fn get_favorite_characters(
         let character_conn = data.user.favourites.characters;
 
         for character in character_conn.nodes {
-            for media in character.media.nodes {
-                if media_id_map.contains(&i64::from(media.id.clone())) {
+            for media in &character.media.nodes {
+                if media_id_map.contains(&(media.id as i64)) {
                     character_list.push(CharacterResponse {
                         id: character.id,
-                        name: character.name,
-                        image: character.image,
-                        site_url: character.site_url,
+                        name: character.name.clone(),
+                        image: character.image.clone(),
+                        site_url: character.site_url.clone(),
+                        media: character
+                            .media
+                            .nodes
+                            .iter()
+                            .filter(|m| media_id_map.contains(&(m.id as i64)))
+                            .map(|m| m.id)
+                            .collect(),
                     });
                     break;
                 }

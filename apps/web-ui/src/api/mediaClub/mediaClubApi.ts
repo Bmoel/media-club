@@ -1,6 +1,6 @@
 import { baseApi } from "../baseApi";
 import { MEDIA_CLUB_MEDIA_TAG, MEDIA_CLUB_USERS_TAG, MEDIA_CLUB_FAVORITES_TAG } from "./mediaClubApi.tags";
-import type { MediaClubMediaResponse, AuthAnilistUserRequest, MediaClubUsersResponse, MediaClubUser, UserFavoritesRequest, UserFavoritesResponse } from "./mediaClubApi.types";
+import type { MediaClubMediaResponse, AuthAnilistUserRequest, MediaClubUsersResponse, MediaClubUser, UserFavoritesRequest, UserFavoritesResponse, UserFavorites } from "./mediaClubApi.types";
 
 const BASE_URL = import.meta.env.VITE_MEDIA_CLUB_API_BASE_URL;
 
@@ -34,13 +34,16 @@ const mediaClubApi = baseApi.injectEndpoints({
                 return errorData?.error?.message ?? "An unknown error occurred";
             }
         }),
-        getUserFavorites: build.query<UserFavoritesResponse, UserFavoritesRequest>({
+        getUserFavorites: build.query<UserFavorites, UserFavoritesRequest>({
             query: ({ user_id }) => ({
                 url: `${BASE_URL}/users/favorites`,
                 method: 'POST',
                 body: { user_id }
             }),
             providesTags: () => [MEDIA_CLUB_FAVORITES_TAG],
+            transformResponse: (response: UserFavoritesResponse) => {
+                return response.data ?? {anime: [], characters: [], manga: []};
+            },
         }),
         syncAnilistUser: build.mutation<boolean, AuthAnilistUserRequest>({
             query: ({ code }) => ({

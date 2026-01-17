@@ -79,36 +79,3 @@ export type AnilistUserInfoRequest = {
 export type AnilistUserInfoResponse = AnilistResponse<AnilistUsersInfoResponseData>;
 
 //////////////////////////////////////////////////////////////////
-
-export type AnilistUserFavorites = {
-    about?: string;
-    bannerImage?: string;
-    favourites: {
-        anime: {
-            nodes: Array<{ id: number }>
-        }
-        characters: {
-            nodes: Array<{
-                id: number;
-                name: {
-                    full?: string;
-                }
-                image: {
-                    medium?: string;
-                }
-                siteUrl?: string;
-                media: {
-                    nodes: Array<{ id: number }>
-                }
-            }>
-        }
-    }
-}
-
-export type AnilistUserFavoriesRequest = {
-    id: number,
-}
-
-export type AnilistUserFavoritesResponse = AnilistResponse<{User: AnilistUserFavorites}>;
-
-//////////////////////////////////////////////////////////////////
