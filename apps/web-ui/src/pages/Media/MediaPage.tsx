@@ -70,7 +70,7 @@ function MediaPage() {
                         </Grid>
                         <Grid size={isMobile ? 12 : 6}>
                             <MediaScoreImageBox
-                                mediaSrc={'/subaru.svg'}
+                                mediaSrc={'/chuuniland.svg'}
                                 titleText="Media Club Average Score"
                                 scoreText={`${mediaClubAverageScore} / 100`}
                             />
