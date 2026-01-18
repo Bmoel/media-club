@@ -1,6 +1,7 @@
 use crate::errors::MyError;
-use governor::DefaultDirectRateLimiter;
+use governor::{DefaultDirectRateLimiter, Jitter};
 use std::sync::Arc;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[derive(Clone)]
 pub struct ThrottledClient {
@@ -19,7 +20,8 @@ impl ThrottledClient {
         T: serde::de::DeserializeOwned,
         P: serde::Serialize,
     {
-        self.limiter.until_ready().await;
+        let jitter = Jitter::new(Duration::from_millis(100), Duration::from_millis(100));
+        self.limiter.until_ready_with_jitter(jitter).await;
 
         let res = self
             .client
@@ -46,7 +48,8 @@ impl ThrottledClient {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        self.limiter.until_ready().await;
+        let jitter = Jitter::new(Duration::from_millis(100), Duration::from_millis(400));
+        self.limiter.until_ready_with_jitter(jitter).await;
 
         let payload = serde_json::json!({
             "query": query,
@@ -63,6 +66,36 @@ impl ThrottledClient {
             .send()
             .await
             .map_err(|_| MyError::Anilist("Failed to recieve anilist response".to_string()))?;
+
+        if res.status() == reqwest::StatusCode::TOO_MANY_REQUESTS {
+            let headers = res.headers();
+
+            let now = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|d| d.as_secs())
+                .unwrap_or(0);
+
+            let reset_timestamp = headers
+                .get("x-ratelimit-reset")
+                .and_then(|h| h.to_str().ok())
+                .and_then(|s| s.parse::<u64>().ok());
+
+            let seconds_to_wait = match reset_timestamp {
+                Some(reset_at) if reset_at > now => reset_at - now,
+                Some(_) => 1,
+                None => 60,
+            };
+
+            return Err(MyError::RateLimited(seconds_to_wait));
+        }
+
+        // Handle other non-success status codes
+        if !res.status().is_success() {
+            return Err(MyError::Anilist(format!(
+                "API returned error status: {}",
+                res.status()
+            )));
+        }
 
         res.json::<T>()
             .await

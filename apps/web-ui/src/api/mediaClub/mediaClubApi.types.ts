@@ -48,12 +48,11 @@ export type AnilistCharacter = {
 }
 
 export type UserFavorites = {
-    anime: Array<number>,
-    manga: Array<number>,
     characters: Array<AnilistCharacter>,
+    has_next_page: boolean,
 }
 
-export type UserFavoritesRequest = {user_id: number};
+export type UserFavoritesRequest = {user_id: number, page: number};
 
 export type UserFavoritesResponse = MediaClubApiResponse<UserFavorites>;
 

@@ -35,14 +35,14 @@ const mediaClubApi = baseApi.injectEndpoints({
             }
         }),
         getUserFavorites: build.query<UserFavorites, UserFavoritesRequest>({
-            query: ({ user_id }) => ({
+            query: ({ user_id, page }) => ({
                 url: `${BASE_URL}/users/favorites`,
                 method: 'POST',
-                body: { user_id }
+                body: { user_id, page }
             }),
             providesTags: () => [MEDIA_CLUB_FAVORITES_TAG],
             transformResponse: (response: UserFavoritesResponse) => {
-                return response.data ?? {anime: [], characters: [], manga: []};
+                return response.data ?? {characters: [], has_next_page: false};
             },
         }),
         syncAnilistUser: build.mutation<boolean, AuthAnilistUserRequest>({
@@ -70,4 +70,5 @@ export const {
     useSyncAnilistUserMutation,
     useRemoveAnilistUserMutation,
     useGetUserFavoritesQuery,
+    useLazyGetUserFavoritesQuery,
 } = mediaClubApi;

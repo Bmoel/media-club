@@ -1,9 +1,7 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import AnilistChip from "../../../components/AnilistChip";
 import type { MediaAnilistUser } from "../../../api/anilist/anilistApi.types";
-import useUserFavorites from "../../../hooks/useUserFavorites";
 import useConfig from "../../../hooks/useConfig";
-import { Favorite } from "@mui/icons-material";
 import type { Media } from "../../../types/media.types";
 import MediaMemberInfoStack from "./MediaMemberInfoStack";
 import CharacterList from "../../../components/CharacterList";
@@ -15,24 +13,15 @@ interface SelectUserInfoProps {
 
 function SelectedUserInfo({ selectedUser, media }: SelectUserInfoProps) {
     const { isMobile } = useConfig();
-    const { getFavoritesCharacters, isFavoriteAnime } = useUserFavorites(selectedUser.user.id);
 
     return (
         <>
             <Grid size={12}>
-                <Box display="flex" justifyContent="space-between">
-                    <AnilistChip
-                        label="User Profile"
-                        href={selectedUser.user.siteUrl}
-                        ariaLabel="Visit anilist profile for the selected user"
-                    />
-                    {isFavoriteAnime(media.id) && (
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Favorite color="error" />
-                            <Typography variant="overline">Favorite</Typography>
-                        </Stack>
-                    )}
-                </Box>
+                <AnilistChip
+                    label="User Profile"
+                    href={selectedUser.user.siteUrl}
+                    ariaLabel="Visit anilist profile for the selected user"
+                />
             </Grid>
             <Grid size={isMobile ? 12 : 6}>
                 <MediaMemberInfoStack>
@@ -56,7 +45,7 @@ function SelectedUserInfo({ selectedUser, media }: SelectUserInfoProps) {
             <Grid size={12}>
                 <MediaMemberInfoStack>
                     <Typography variant="overline" color="text.secondary">FAVORITE CHARACTERS</Typography>
-                    <CharacterList characters={getFavoritesCharacters(media?.id)} />
+                    <CharacterList userId={selectedUser.user.id} mediaId={media.id} />
                 </MediaMemberInfoStack>
             </Grid>
         </>

@@ -31,7 +31,7 @@ pub async fn users_favorites_route(
         // User does not exist in database -_-
         return Err(MyError::Internal("User does not exist".to_string()));
     }
-    let favorites = anilist_favorites_service::get_user_favorites(&state, payload.user_id).await?;
+    let favorites = anilist_favorites_service::get_user_favorites(&state, payload).await?;
 
     Ok(Json(ApiResponse {
         success: true,

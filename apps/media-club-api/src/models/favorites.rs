@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FavoritesPayload {
     pub user_id: i32,
+    pub page: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -17,9 +18,8 @@ pub struct CharacterResponse {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FavoritesResponse {
-    pub anime: Vec<i32>,
-    pub manga: Vec<i32>,
     pub characters: Vec<CharacterResponse>,
+    pub has_next_page: bool,
 }
 
 #[derive(Deserialize)]
@@ -42,16 +42,6 @@ pub struct DataWrapper<T> {
 #[derive(Deserialize)]
 pub struct UserWrapper<T> {
     pub favourites: T,
-}
-
-#[derive(Deserialize)]
-pub struct AnimeFavs {
-    pub anime: Connection<MediaNode>,
-}
-
-#[derive(Deserialize)]
-pub struct MangaFavs {
-    pub manga: Connection<MediaNode>,
 }
 
 #[derive(Deserialize)]

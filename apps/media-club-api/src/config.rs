@@ -44,7 +44,8 @@ pub async fn startup_app_state() -> Result<AppState, MyError> {
         .timeout(std::time::Duration::from_secs(10))
         .build()
         .map_err(|_e| MyError::Internal("Failed to establish http client".into()))?;
-    let quota = Quota::per_minute(NonZeroU32::new(90).unwrap());
+    let quota =
+        Quota::per_minute(NonZeroU32::new(30).unwrap()).allow_burst(NonZeroU32::new(10).unwrap());
     let limiter = RateLimiter::direct(quota);
 
     let throttled_client = ThrottledClient::new(http_client, Arc::new(limiter));
