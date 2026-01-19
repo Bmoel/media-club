@@ -56,7 +56,7 @@ export default function MenuBar() {
                 <List sx={listCss}>
                     <ListItem key={'title'}>
                         <ListItemAvatar>
-                            <Avatar alt='chuuniland logo' src="/chuuniland.svg" />
+                            <Avatar alt='chuuniland logo' src="/subaru.svg" />
                         </ListItemAvatar>
                         <ListItemText>
                             <Typography fontWeight="bold">Media Club</Typography>

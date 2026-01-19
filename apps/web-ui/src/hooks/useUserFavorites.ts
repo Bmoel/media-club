@@ -1,45 +1,65 @@
-import { useCallback } from "react";
-import { useAnilistUserFavoritesQuery } from "../api/anilist/anilistApi";
-import type { Character } from "../types/characters.types";
+import { useCallback, useState } from "react";
+import { useLazyGetUserFavoritesQuery } from "../api/mediaClub/mediaClubApi";
+import type { AnilistCharacter } from "../api/mediaClub/mediaClubApi.types";
 
-function useUserFavorites(userId?: number) {
-    const { data: userFavorites, isLoading: userFavoritesAreLoading } = useAnilistUserFavoritesQuery(
-        { id: userId as number },
-        { skip: typeof userId !== 'number' }
-    );
+export type UserFavoritesError = {
+    error: string;
+}
 
-    const isFavoriteAnime = useCallback((animeId: number | undefined): boolean => {
-        if (userFavorites === undefined || animeId === undefined || userFavoritesAreLoading) {
-            return false;
+function useUserFavorites() {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [trigger] = useLazyGetUserFavoritesQuery();
+
+    const getFavoritesCharacters = useCallback(async (userId: number, signal?: AbortSignal): Promise<AnilistCharacter[] | UserFavoritesError> => {
+        setIsLoading(true);
+
+        let allCharacters: AnilistCharacter[] | undefined = [];
+        let currentPage = 1;
+        let hasNextPage = true;
+        const MAX_PAGES = 20;
+
+        try {
+            while (hasNextPage && currentPage <= MAX_PAGES) {
+                if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
+
+                const result = await trigger({ user_id: userId, page: currentPage }, true).unwrap();
+
+                const newCharacters = result.characters;
+                allCharacters = [...allCharacters, ...newCharacters];
+
+                hasNextPage = result.has_next_page ?? false;
+                currentPage++;
+            }
+        } catch (error: unknown) {
+            if (error instanceof DOMException && error.name === 'AbortError') {
+                return []; 
+            }
+            const defaultErr = 'Failed to get favorite characters, please try again later';
+            if (typeof error === 'object' 
+                && error
+                && 'data' in error
+                && error.data
+                && typeof error.data === 'object'
+                && 'error' in error.data
+                && error.data.error
+                && typeof error.data.error === 'object'
+                && 'message' in error.data.error
+                && error.data.error.message
+                && typeof error.data.error.message === 'string'
+            ) {
+                return { error: error?.data?.error?.message ?? defaultErr };
+            }
+            return {error: defaultErr};
+        } finally {
+            setIsLoading(false);
         }
-        return userFavorites.favourites.anime.nodes.some(node => node.id === animeId);
-    }, [userFavorites, userFavoritesAreLoading]);
 
-    const getFavoritesCharacters = useCallback((animeId: number | undefined): Character[] => {
-        if (userFavorites === undefined || animeId === undefined || userFavoritesAreLoading) {
-            return [];
-        }
-        const characters: Character[] = [];
-        userFavorites.favourites.characters.nodes.filter(node => {
-            const mediaCharacterAreIn = node.media.nodes;
-            mediaCharacterAreIn.forEach(mediaObj => {
-                if (mediaObj.id === animeId) {
-                    characters.push({
-                        id: node.id,
-                        name: node.name.full ?? '',
-                        image: node.image.medium ?? '',
-                        siteUrl: node.siteUrl ?? '',
-                    });
-                }
-            });
-        });
-        return characters;
-    }, [userFavorites, userFavoritesAreLoading]);
+        return allCharacters;
+    }, [trigger]);
 
     return {
-        isFavoriteAnime,
+        charactersAreLoading: isLoading,
         getFavoritesCharacters,
-        userFavoritesAreLoading
     };
 }
 
